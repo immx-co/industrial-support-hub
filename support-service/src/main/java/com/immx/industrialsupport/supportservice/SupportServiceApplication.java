@@ -11,5 +11,4 @@ public class SupportServiceApplication {
                 SupportServiceApplication.class,
                 args);
     }
-
 }
