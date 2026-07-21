@@ -24,4 +24,9 @@ public enum ErrorCode {
      * Сущность удалена.
      */
     DELETED,
+
+    /**
+     * Сущность уже существует.
+     */
+    ALREADY_EXISTS,
 }

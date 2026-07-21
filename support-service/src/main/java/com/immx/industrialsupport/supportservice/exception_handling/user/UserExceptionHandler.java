@@ -1,4 +1,4 @@
-package com.immx.industrialsupport.supportservice.exception_handling.department;
+package com.immx.industrialsupport.supportservice.exception_handling.user;
 
 import com.immx.industrialsupport.supportservice.dto.ErrorCode;
 import com.immx.industrialsupport.supportservice.dto.common.IncorrectResponseData;
@@ -11,24 +11,23 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * Обработчик ошибок, связанных с работой с подразделениями организации.
+ * Обработчик ошибок, связанных с пользователями подразделений.
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class DepartmentExceptionHandler {
+public class UserExceptionHandler {
 
     @Autowired
     private ErrorCodeHttpStatusMapper errorCodeHttpStatusMapper;
 
     /**
-     * Обработчик ошибки <code>NotFoundDepartmentException</code>.
-     *
-     * @param exception возникшая ошибка <code>NotFoundDepartmentException</code>
-     * @return ответ сервиса с ошибкой <code>NotFoundDepartmentException</code>
+     * Обработчик ошибки <code>UserAlreadyExistsException</code>.
+     * @param exception возникшая ошибка <code>UserAlreadyExistsException</code>
+     * @return ответ сервиса с ошибкой <code>UserAlreadyExistsException</code>
      */
     @ExceptionHandler
-    public ResponseEntity<IncorrectResponseData<Void>> handleException(NotFoundDepartmentException exception) {
-        ErrorCode errorCode = ErrorCode.NOT_FOUND;
+    public ResponseEntity<IncorrectResponseData<Void>> handleException(UserAlreadyExistsException exception) {
+        ErrorCode errorCode = ErrorCode.ALREADY_EXISTS;
         IncorrectResponseData<Void> data = new IncorrectResponseData<>(
                 errorCode,
                 exception.getMessage(),

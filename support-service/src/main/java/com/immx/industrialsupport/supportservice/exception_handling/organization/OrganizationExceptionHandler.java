@@ -4,6 +4,8 @@ import com.immx.industrialsupport.supportservice.dto.ErrorCode;
 import com.immx.industrialsupport.supportservice.dto.common.IncorrectResponseData;
 import com.immx.industrialsupport.supportservice.exception_handling.ErrorCodeHttpStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 /**
  * Обработчик ошибок, связанных с работой с организациями.
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class OrganizationExceptionHandler {
 

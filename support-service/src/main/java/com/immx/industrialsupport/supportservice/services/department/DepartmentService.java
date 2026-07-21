@@ -1,12 +1,10 @@
 package com.immx.industrialsupport.supportservice.services.department;
 
 import com.immx.industrialsupport.supportservice.dto.department.CreateDepartmentRequest;
-import com.immx.industrialsupport.supportservice.dto.department.DepartmentResponse;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 import com.immx.industrialsupport.supportservice.exception_handling.department.NotFoundDepartmentException;
 import com.immx.industrialsupport.supportservice.exception_handling.organization.NotFoundOrganizationException;
-import com.immx.industrialsupport.supportservice.exception_handling.organization.OrganizationExceptionHandler;
 import com.immx.industrialsupport.supportservice.repositories.DepartmentRepository;
 import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

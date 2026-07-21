@@ -8,6 +8,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+/**
+ * Модель организации.
+ */
 @Entity
 @Table(name = "organizations")
 @Getter

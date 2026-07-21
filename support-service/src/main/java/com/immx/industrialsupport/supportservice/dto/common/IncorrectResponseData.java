@@ -29,7 +29,8 @@ public class IncorrectResponseData<T> extends BaseResponseData {
      * @param data      Тело ответа.
      */
     @JsonCreator
-    public IncorrectResponseData(@JsonProperty("errorCode") ErrorCode errorCode, @JsonProperty("info") String info,
+    public IncorrectResponseData(@JsonProperty("errorCode") ErrorCode errorCode,
+                                 @JsonProperty("info") String info,
                                  @JsonProperty("data") T data) {
         super(errorCode);
         this.info = info;

@@ -9,15 +9,15 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * Модель подразделения организации.
+ * Модель пользователя.
  */
 @Entity
-@Table(name = "departments")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(onlyExplicitlyIncluded = true)
-public class Department {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,10 +34,10 @@ public class Department {
             optional = false
     )
     @JoinColumn(
-            name = "organization_id",
+            name = "department_id",
             nullable = false
     )
-    private Organization organization;
+    private Department department;
 
     @Column(
             name = "external_id",
@@ -47,12 +47,48 @@ public class Department {
     private String externalId;
 
     @Column(
-            name = "name",
+            name = "username",
+            nullable = false,
+            length = 100
+    )
+    @ToString.Include
+    private String username;
+
+    @Column(
+            name = "email",
             nullable = false,
             length = 255
     )
+    private String email;
+
+    @Column(
+            name = "password_hash",
+            nullable = false,
+            length = 255
+    )
+    private String passwordHash;
+
+    @Column(
+            name = "first_name",
+            nullable = false,
+            length = 100
+    )
     @ToString.Include
-    private String name;
+    private String firstName;
+
+    @Column(
+            name = "last_name",
+            nullable = false,
+            length = 100
+    )
+    @ToString.Include
+    private String lastName;
+
+    @Column(
+            name = "enabled",
+            nullable = false
+    )
+    private boolean enabled = true;
 
     @CreationTimestamp
     @Column(
@@ -60,7 +96,6 @@ public class Department {
             nullable = false,
             updatable = false
     )
-    @ToString.Include
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
@@ -70,9 +105,14 @@ public class Department {
     )
     private OffsetDateTime updatedAt;
 
-    public Department(Organization organization, String externalId, String name) {
-        this.organization = organization;
+    public User(Department department, String externalId, String username, String email, String passwordHash,
+                String firstName, String lastName) {
+        this.department = department;
         this.externalId = externalId;
-        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }
