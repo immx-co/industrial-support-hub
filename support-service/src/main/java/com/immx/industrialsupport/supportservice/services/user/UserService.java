@@ -1,21 +1,28 @@
 package com.immx.industrialsupport.supportservice.services.user;
 
+import com.immx.industrialsupport.supportservice.dto.role.RoleName;
 import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
+import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Organization;
+import com.immx.industrialsupport.supportservice.entities.Role;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.exception_handling.department.NotFoundDepartmentException;
 import com.immx.industrialsupport.supportservice.exception_handling.organization.NotFoundOrganizationException;
+import com.immx.industrialsupport.supportservice.exception_handling.user.NotFoundUserException;
 import com.immx.industrialsupport.supportservice.exception_handling.user.UserAlreadyExistsException;
 import com.immx.industrialsupport.supportservice.repositories.DepartmentRepository;
 import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
+import com.immx.industrialsupport.supportservice.repositories.RoleRepository;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -32,6 +39,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -83,6 +93,44 @@ public class UserService implements IUserService {
                 createUserRequest.getFirstName(),
                 createUserRequest.getLastName());
 
+        Set<RoleName> requestedRoleNames = createUserRequest.getRoles();
+
+        if(requestedRoleNames == null || requestedRoleNames.isEmpty())
+            requestedRoleNames = Set.of(RoleName.ROLE_EMPLOYEE);
+
+        List<Role> roles = roleRepository.findAllByNameIn(requestedRoleNames);
+
+        if(roles.size() != requestedRoleNames.size())
+            throw new IllegalStateException("One or more requested roles are missing in the database");
+
+        user.getRoles()
+                .addAll(roles);
+
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateRoles(UUID userId,
+                            UpdateUserRolesRequest updateUserRolesRequest) {
+        Optional<User> user = userRepository.findByIdWithRoles(userId);
+
+        if(user.isEmpty())
+            throw new NotFoundUserException("There is no user with ID = " + userId);
+
+        List<Role> roles = roleRepository.findAllByNameIn(updateUserRolesRequest.getRoles());
+
+        if(roles.size() != updateUserRolesRequest.getRoles()
+                .size())
+            throw new IllegalStateException("One or more requested roles are missing in the database");
+
+        user.get()
+                .getRoles()
+                .clear();
+        user.get()
+                .getRoles()
+                .addAll(roles);
+
+        return userRepository.save(user.get());
     }
 }

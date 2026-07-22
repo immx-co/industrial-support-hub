@@ -26,7 +26,11 @@ public interface DepartmentRepository extends JpaRepository<Department, UUID> {
                     SELECT department FROM Department department WHERE department.id = :departmentId AND department.organization.id = :organizationId
                     """
     )
-    Optional<Department> findByIdAndOrganizationId(@Param("organizationId") UUID organizationId, @Param(
-            "departmentId"
-    ) UUID departmentId);
+    Optional<Department> findByIdAndOrganizationId(@Param("organizationId") UUID organizationId,
+                                                   @Param(
+                                                           "departmentId"
+                                                   ) UUID departmentId);
+
+    boolean existsByOrganization_IdAndNameIgnoreCase(UUID organizationId,
+                                                     String name);
 }

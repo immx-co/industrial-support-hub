@@ -1,10 +1,13 @@
 package com.immx.industrialsupport.supportservice.dto.user;
 
+import com.immx.industrialsupport.supportservice.dto.role.RoleName;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 /**
  * Модель для создания пользователя.
@@ -34,4 +37,6 @@ public class CreateUserRequest {
     private String firstName;
 
     private String lastName;
+
+    private Set<RoleName> roles;
 }

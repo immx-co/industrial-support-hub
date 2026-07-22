@@ -20,6 +20,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                         FROM User user
                         JOIN FETCH user.department department
                         JOIN FETCH department.organization organization
+                        LEFT JOIN FETCH user.roles roles
                         WHERE department.id = :departmentId
                     """
     )
@@ -27,16 +28,31 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(
             """
-                        SELECT user
+                        SELECT DISTINCT user
                         FROM User user
                         JOIN FETCH user.department department
                         JOIN FETCH department.organization organization
+                        LEFT JOIN FETCH user.roles roles
                         WHERE organization.id = :organizationId
                     """
     )
     List<User> findAllByOrganization(@Param("organizationId") UUID organizationId);
 
-    Optional<User> findByDepartment_IdAndUsernameIgnoreCase(UUID departmentId, String username);
+    @Query(
+            """
+                        SELECT DISTINCT user
+                        FROM User user
+                        JOIN FETCH user.department department
+                        JOIN FETCH department.organization organiazation
+                        LEFT JOIN FETCH user.roles roles
+                        WHERE user.id = :userId
+                    """
+    )
+    Optional<User> findByIdWithRoles(@Param("userId") UUID userId);
 
-    boolean existsByDepartment_IdAndUsernameIgnoreCase(UUID departmentId, String username);
+    Optional<User> findByDepartment_IdAndUsernameIgnoreCase(UUID departmentId,
+                                                            String username);
+
+    boolean existsByDepartment_IdAndUsernameIgnoreCase(UUID departmentId,
+                                                       String username);
 }

@@ -1,10 +1,12 @@
 package com.immx.industrialsupport.supportservice.mappers;
 
 import com.immx.industrialsupport.supportservice.dto.user.UserResponse;
+import com.immx.industrialsupport.supportservice.entities.Role;
 import com.immx.industrialsupport.supportservice.entities.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Маппер модели пользователя в модель ответа сервиса
@@ -33,7 +35,11 @@ public class UserMapper {
                 user.getLastName(),
                 user.isEnabled(),
                 user.getCreatedAt(),
-                user.getUpdatedAt());
+                user.getUpdatedAt(),
+                user.getRoles()
+                        .stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toSet()));
     }
 
     /**

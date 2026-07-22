@@ -1,6 +1,9 @@
 package com.immx.industrialsupport.supportservice.dto.user;
 
+import com.immx.industrialsupport.supportservice.dto.role.RoleName;
+
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 public record UserResponse(UUID id,
@@ -13,5 +16,6 @@ public record UserResponse(UUID id,
                            String lastName,
                            boolean enabled,
                            OffsetDateTime createdAt,
-                           OffsetDateTime updatedAt) {
+                           OffsetDateTime updatedAt,
+                           Set<RoleName> roles) {
 }

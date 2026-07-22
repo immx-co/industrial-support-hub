@@ -37,4 +37,22 @@ public class DepartmentExceptionHandler {
         return ResponseEntity.status(errorCodeHttpStatusMapper.map(errorCode))
                 .body(data);
     }
+
+    /**
+     * Обработчик ошибки <code>DepartmentAlreadyExistsException</code>.
+     *
+     * @param exception возникшая ошибка <code>DepartmentAlreadyExistsException</code>
+     * @return ответ сервиса с ошибкой <code>DepartmentAlreadyExistsException</code>
+     */
+    @ExceptionHandler
+    public ResponseEntity<IncorrectResponseData<Void>> handleException(DepartmentAlreadyExistsException exception) {
+        ErrorCode errorCode = ErrorCode.ALREADY_EXISTS;
+        IncorrectResponseData<Void> data = new IncorrectResponseData<>(
+                errorCode,
+                exception.getMessage(),
+                null);
+
+        return ResponseEntity.status(errorCodeHttpStatusMapper.map(errorCode))
+                .body(data);
+    }
 }

@@ -2,6 +2,7 @@ package com.immx.industrialsupport.supportservice.controllers;
 
 import com.immx.industrialsupport.supportservice.dto.common.IndustrialSupportResponseData;
 import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
+import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.supportservice.dto.user.UserResponse;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.mappers.UserMapper;
@@ -91,6 +92,23 @@ public class UserController {
 
         return ResponseEntity.ok(new IndustrialSupportResponseData<>(
                 "Пользователь успешно создан",
+                response));
+    }
+
+    @PutMapping("/{id}/roles")
+    @Operation(
+            summary = "Изменяет роли пользователя",
+            description = "Пользователь с измененными ролями"
+    )
+    public ResponseEntity<IndustrialSupportResponseData<UserResponse>> updateUserRoles(@PathVariable("id") UUID id,
+                                                                                       @RequestBody @Valid UpdateUserRolesRequest updateUserRolesRequest) {
+        User user = userService.updateRoles(
+                id,
+                updateUserRolesRequest);
+        UserResponse response = userMapper.toResponse(user);
+
+        return ResponseEntity.ok(new IndustrialSupportResponseData<>(
+                "Роли пользователя изменены",
                 response));
     }
 }
