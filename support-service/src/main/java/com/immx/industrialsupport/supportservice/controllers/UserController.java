@@ -8,6 +8,7 @@ import com.immx.industrialsupport.supportservice.mappers.UserMapper;
 import com.immx.industrialsupport.supportservice.services.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -82,7 +83,7 @@ public class UserController {
             description = "Возвращает созданного пользователя подразделения"
     )
     public ResponseEntity<IndustrialSupportResponseData<UserResponse>> createUser(@PathVariable("departmentId") UUID departmentId,
-                                                                                  @RequestBody CreateUserRequest createUserRequest) {
+                                                                                  @RequestBody @Valid CreateUserRequest createUserRequest) {
         User user = userService.create(
                 departmentId,
                 createUserRequest);

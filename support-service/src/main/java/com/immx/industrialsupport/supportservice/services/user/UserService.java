@@ -1,7 +1,6 @@
 package com.immx.industrialsupport.supportservice.services.user;
 
 import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
-import com.immx.industrialsupport.supportservice.dto.user.UserResponse;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 import com.immx.industrialsupport.supportservice.entities.User;
@@ -12,6 +11,7 @@ import com.immx.industrialsupport.supportservice.repositories.DepartmentReposito
 import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +32,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsersByDepartmentId(UUID departmentId) {
@@ -76,7 +79,7 @@ public class UserService implements IUserService {
                 createUserRequest.getExternalId(),
                 createUserRequest.getUsername(),
                 createUserRequest.getEmail(),
-                createUserRequest.getPassword(),
+                passwordEncoder.encode(createUserRequest.getPassword()),
                 createUserRequest.getFirstName(),
                 createUserRequest.getLastName());
 

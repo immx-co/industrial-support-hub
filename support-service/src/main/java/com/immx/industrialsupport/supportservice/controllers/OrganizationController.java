@@ -8,6 +8,7 @@ import com.immx.industrialsupport.supportservice.mappers.OrganizationMapper;
 import com.immx.industrialsupport.supportservice.services.organization.IOrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -82,7 +83,7 @@ public class OrganizationController {
             summary = "Добавить организацию",
             description = "Возвращает добавленную организацию"
     )
-    public ResponseEntity<IndustrialSupportResponseData<OrganizationResponse>> saveOrganization(@RequestBody CreateOrganizationRequest createOrganizationRequest) {
+    public ResponseEntity<IndustrialSupportResponseData<OrganizationResponse>> saveOrganization(@RequestBody @Valid CreateOrganizationRequest createOrganizationRequest) {
         Organization organization = organizationService.save(createOrganizationRequest);
         OrganizationResponse response = organizationMapper.toResponse(organization);
 

@@ -9,7 +9,9 @@ import com.immx.industrialsupport.supportservice.mappers.DepartmentMapper;
 import com.immx.industrialsupport.supportservice.services.department.IDepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,8 +57,9 @@ public class DepartmentController {
             description = "Возвращает добавленное подразделение"
     )
     public ResponseEntity<IndustrialSupportResponseData<DepartmentResponse>> saveDepartment(@PathVariable(
-            "organizationId"
-    ) UUID organizationId, @RequestBody CreateDepartmentRequest createDepartmentRequest) {
+                                                                                                    "organizationId"
+                                                                                            ) UUID organizationId,
+                                                                                            @RequestBody @Valid CreateDepartmentRequest createDepartmentRequest) {
         Department department = departmentService.create(
                 organizationId,
                 createDepartmentRequest);
@@ -73,10 +76,11 @@ public class DepartmentController {
             description = "Возвращает подразделение конкретной организации"
     )
     public ResponseEntity<IndustrialSupportResponseData<DepartmentResponseWithoutId>> getDepartment(@PathVariable(
-            "organizationId"
-    ) UUID organizationId, @PathVariable(
-            "departmentId"
-    ) UUID departmentId) {
+                                                                                                            "organizationId"
+                                                                                                    ) UUID organizationId,
+                                                                                                    @PathVariable(
+                                                                                                            "departmentId"
+                                                                                                    ) UUID departmentId) {
         Department department = departmentService.getById(
                 organizationId,
                 departmentId);
