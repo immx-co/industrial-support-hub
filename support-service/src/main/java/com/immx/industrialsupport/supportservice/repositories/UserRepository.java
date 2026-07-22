@@ -1,6 +1,7 @@
 package com.immx.industrialsupport.supportservice.repositories;
 
 import com.immx.industrialsupport.supportservice.entities.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(
             """
-                        SELECT user
+                        SELECT DISTINCT user
                         FROM User user
                         JOIN FETCH user.department department
                         JOIN FETCH department.organization organization
@@ -43,13 +44,16 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                         SELECT DISTINCT user
                         FROM User user
                         JOIN FETCH user.department department
-                        JOIN FETCH department.organization organiazation
+                        JOIN FETCH department.organization organization
                         LEFT JOIN FETCH user.roles roles
                         WHERE user.id = :userId
                     """
     )
     Optional<User> findByIdWithRoles(@Param("userId") UUID userId);
 
+    @EntityGraph(
+            attributePaths = { "department", "department.organization", "roles" }
+    )
     Optional<User> findByDepartment_IdAndUsernameIgnoreCase(UUID departmentId,
                                                             String username);
 

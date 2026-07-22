@@ -22,6 +22,8 @@ public class ErrorCodeHttpStatusMapper {
             case INVALID_REQUEST -> HttpStatus.INTERNAL_SERVER_ERROR;
             case DELETED -> HttpStatus.BAD_REQUEST;
             case ALREADY_EXISTS -> HttpStatus.CONFLICT;
+            case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+            case FORBIDDEN -> HttpStatus.FORBIDDEN;
         };
     }
 }

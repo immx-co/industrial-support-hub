@@ -29,4 +29,14 @@ public enum ErrorCode {
      * Сущность уже существует.
      */
     ALREADY_EXISTS,
+
+    /**
+     * Пользователь не авторизован.
+     */
+    UNAUTHORIZED,
+
+    /**
+     * Ошибка в использовании <code>credentials</code>.
+     */
+    FORBIDDEN,
 }
