@@ -70,7 +70,15 @@ public class Department {
     )
     private OffsetDateTime updatedAt;
 
-    public Department(Organization organization, String externalId, String name) {
+    /**
+     * ctor класса <code>Department</code>.
+     * @param organization организация подразделения
+     * @param externalId внутренний идентификатор подразделения организации
+     * @param name название подразделения организации
+     */
+    public Department(Organization organization,
+                      String externalId,
+                      String name) {
         this.organization = organization;
         this.externalId = externalId;
         this.name = name;

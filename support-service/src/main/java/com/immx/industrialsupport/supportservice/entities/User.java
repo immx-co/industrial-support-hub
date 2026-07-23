@@ -115,8 +115,23 @@ public class User {
     )
     private OffsetDateTime updatedAt;
 
-    public User(Department department, String externalId, String username, String email, String passwordHash,
-                String firstName, String lastName) {
+    /**
+     * ctor класса <code>User</code>.
+     * @param department подразделение сотрудника
+     * @param externalId внутренний идентификатор сотрудника
+     * @param username имя пользователя сотрудника
+     * @param email адрес электронной почты сотрудника
+     * @param passwordHash хэшированный пароль сотрудника
+     * @param firstName имя сотрудника
+     * @param lastName фамилия сотрудника
+     */
+    public User(Department department,
+                String externalId,
+                String username,
+                String email,
+                String passwordHash,
+                String firstName,
+                String lastName) {
         this.department = department;
         this.externalId = externalId;
         this.username = username;

@@ -1,6 +1,7 @@
 package com.immx.industrialsupport.supportservice.controllers;
 
 import com.immx.industrialsupport.supportservice.dto.common.IndustrialSupportResponseData;
+import com.immx.industrialsupport.supportservice.dto.role.RoleName;
 import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
 import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.supportservice.dto.user.UserResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -98,7 +100,7 @@ public class UserController {
     @PutMapping("/{id}/roles")
     @Operation(
             summary = "Изменяет роли пользователя",
-            description = "Пользователь с измененными ролями"
+            description = "Возвращает пользователя с измененными ролями"
     )
     public ResponseEntity<IndustrialSupportResponseData<UserResponse>> updateUserRoles(@PathVariable("id") UUID id,
                                                                                        @RequestBody @Valid UpdateUserRolesRequest updateUserRolesRequest) {
@@ -110,5 +112,23 @@ public class UserController {
         return ResponseEntity.ok(new IndustrialSupportResponseData<>(
                 "Роли пользователя изменены",
                 response));
+    }
+
+    /**
+     * Получает коллекцию ролей пользователя по идентификатору.
+     * @param id идентификатор пользователя
+     * @return коллекция ролей пользователя
+     */
+    @GetMapping("/{id}/roles")
+    @Operation(
+            summary = "Получает коллекцию ролей пользователя по идентификатору",
+            description = "Возвращает коллекцию ролей пользователя"
+    )
+    public ResponseEntity<IndustrialSupportResponseData<Set<RoleName>>> getUserRoles(@PathVariable("id") UUID id) {
+        Set<RoleName> roles = userService.getRoles(id);
+
+        return ResponseEntity.ok(new IndustrialSupportResponseData<>(
+                "Коллекция ролей пользователя успешно получена",
+                roles));
     }
 }

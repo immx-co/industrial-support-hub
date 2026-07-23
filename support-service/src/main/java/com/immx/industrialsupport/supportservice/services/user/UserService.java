@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Сервис для работы с пользователями
@@ -132,5 +133,18 @@ public class UserService implements IUserService {
                 .addAll(roles);
 
         return userRepository.save(user.get());
+    }
+
+    @Override
+    public Set<RoleName> getRoles(UUID userId) {
+        User user = userRepository.findByIdWithRoles(userId)
+                .orElseThrow(() -> new NotFoundUserException("There is no user with ID + " + userId));
+
+        Set<RoleName> roles = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.toUnmodifiableSet());
+
+        return roles;
     }
 }

@@ -1,10 +1,12 @@
 package com.immx.industrialsupport.supportservice.services.user;
 
+import com.immx.industrialsupport.supportservice.dto.role.RoleName;
 import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
 import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.supportservice.entities.User;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -44,4 +46,11 @@ public interface IUserService {
      * @return обновленный пользователь
      */
     User updateRoles(UUID userId, UpdateUserRolesRequest updateUserRolesRequest);
+
+    /**
+     * Получает коллекцию ролей пользователя.
+     * @param userId идентификатор пользователя, список ролей которого получить
+     * @return коллекция ролей пользователя
+     */
+    Set<RoleName> getRoles(UUID userId);
 }
