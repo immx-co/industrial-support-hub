@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.entities;
 
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
+import com.immx.industrialsupport.contracts.role.RoleName;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

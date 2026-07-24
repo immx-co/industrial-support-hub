@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.mappers;
 
-import com.immx.industrialsupport.supportservice.dto.organization.OrganizationResponse;
+import com.immx.industrialsupport.contracts.organization.OrganizationResponse;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +14,7 @@ public class OrganizationMapper {
 
     /**
      * Маппит модель организации в модель ответа сервиса.
+     *
      * @param organization модель организации для преобразования в модель ответа сервиса
      * @return модель ответа сервиса
      */
@@ -28,6 +29,7 @@ public class OrganizationMapper {
 
     /**
      * Маппит список моделей организаций в модель ответа сервиса.
+     *
      * @param organizations список моделей организации для преобразования в модель ответа сервиса
      * @return модель ответа сервиса
      */

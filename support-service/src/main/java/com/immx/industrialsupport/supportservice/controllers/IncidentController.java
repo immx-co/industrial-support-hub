@@ -1,10 +1,10 @@
 package com.immx.industrialsupport.supportservice.controllers;
 
-import com.immx.industrialsupport.supportservice.dto.common.IndustrialSupportResponseData;
-import com.immx.industrialsupport.supportservice.dto.incident.AssignIncidentRequest;
-import com.immx.industrialsupport.supportservice.dto.incident.ChangeIncidentStatusRequest;
-import com.immx.industrialsupport.supportservice.dto.incident.CreateIncidentRequest;
-import com.immx.industrialsupport.supportservice.dto.incident.IncidentResponse;
+import com.immx.industrialsupport.contracts.common.IndustrialSupportResponseData;
+import com.immx.industrialsupport.contracts.incident.AssignIncidentRequest;
+import com.immx.industrialsupport.contracts.incident.ChangeIncidentStatusRequest;
+import com.immx.industrialsupport.contracts.incident.CreateIncidentRequest;
+import com.immx.industrialsupport.contracts.incident.IncidentResponse;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import com.immx.industrialsupport.supportservice.mappers.IncidentMapper;
 import com.immx.industrialsupport.supportservice.services.incident.IIncidentService;

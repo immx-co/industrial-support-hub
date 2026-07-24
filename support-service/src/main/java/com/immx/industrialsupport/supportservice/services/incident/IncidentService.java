@@ -1,7 +1,7 @@
 package com.immx.industrialsupport.supportservice.services.incident;
 
-import com.immx.industrialsupport.supportservice.dto.incident.*;
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
+import com.immx.industrialsupport.contracts.incident.*;
+import com.immx.industrialsupport.contracts.role.RoleName;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import com.immx.industrialsupport.supportservice.entities.Organization;

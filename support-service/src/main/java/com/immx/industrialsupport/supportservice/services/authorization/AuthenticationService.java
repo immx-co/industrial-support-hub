@@ -1,7 +1,7 @@
 package com.immx.industrialsupport.supportservice.services.authorization;
 
-import com.immx.industrialsupport.supportservice.dto.authorization.LoginRequest;
-import com.immx.industrialsupport.supportservice.dto.authorization.LoginResponse;
+import com.immx.industrialsupport.contracts.authorization.LoginRequest;
+import com.immx.industrialsupport.contracts.authorization.LoginResponse;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

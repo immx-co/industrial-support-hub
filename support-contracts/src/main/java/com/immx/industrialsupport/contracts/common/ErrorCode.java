@@ -1,0 +1,42 @@
+package com.immx.industrialsupport.contracts.common;
+
+/**
+ * Статус коды ошибок сервиса.
+ */
+public enum ErrorCode {
+
+    /**
+     * Успех.
+     */
+    SUCCESS,
+
+    /**
+     * Сущность не найдена.
+     */
+    NOT_FOUND,
+
+    /**
+     * Неудачный запрос.
+     */
+    INVALID_REQUEST,
+
+    /**
+     * Сущность удалена.
+     */
+    DELETED,
+
+    /**
+     * Сущность уже существует.
+     */
+    ALREADY_EXISTS,
+
+    /**
+     * Пользователь не авторизован.
+     */
+    UNAUTHORIZED,
+
+    /**
+     * Ошибка в использовании <code>credentials</code>.
+     */
+    FORBIDDEN,
+}

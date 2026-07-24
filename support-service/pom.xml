@@ -140,6 +140,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.immx.industrialsupport</groupId>
+            <artifactId>support-contracts</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,6 +1,8 @@
 package com.immx.industrialsupport.supportservice.services.incident;
 
-import com.immx.industrialsupport.supportservice.dto.incident.*;
+import com.immx.industrialsupport.contracts.incident.AssignIncidentRequest;
+import com.immx.industrialsupport.contracts.incident.ChangeIncidentStatusRequest;
+import com.immx.industrialsupport.contracts.incident.CreateIncidentRequest;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,9 @@ public interface IIncidentService {
 
     /**
      * Создаёт обращение.
+     *
      * @param organizationId идентификатор организации, в которой создаётся обращение.
-     * @param request модель запроса на создание обращения.
+     * @param request        модель запроса на создание обращения.
      * @return созданное обращение.
      */
     Incident create(UUID organizationId,
@@ -24,8 +27,9 @@ public interface IIncidentService {
 
     /**
      * Получает обращение по идентификатору и по идентификатору организации.
+     *
      * @param organizationId идентификатор организации.
-     * @param incidentId идентификатор обращения.
+     * @param incidentId     идентификатор обращения.
      * @return полученное обращение
      */
     Incident getById(UUID organizationId,
@@ -33,6 +37,7 @@ public interface IIncidentService {
 
     /**
      * Получает список обращений в организации.
+     *
      * @param organizationId идентификатор организации
      * @return полученный список обращений по идентификатору организации
      */
@@ -40,8 +45,9 @@ public interface IIncidentService {
 
     /**
      * Назначает инженера на выполнение обращения.
-     * @param organizationId идентификатор организации, в которой назначить инженера на выполнение обращения
-     * @param incidentId идентификатор обращения, которое назначить на инженера
+     *
+     * @param organizationId        идентификатор организации, в которой назначить инженера на выполнение обращения
+     * @param incidentId            идентификатор обращения, которое назначить на инженера
      * @param assignIncidentRequest модель запроса на назначения инженера на выполнение обращения
      * @return полученное обращение с назначенным инженером на ее выполнение
      */
@@ -51,8 +57,9 @@ public interface IIncidentService {
 
     /**
      * Изменяет статус обращения.
-     * @param organizationId идентификатор организации, статус обращения в которой изменить
-     * @param incidentId идентификатор обращения, статус которого изменить
+     *
+     * @param organizationId              идентификатор организации, статус обращения в которой изменить
+     * @param incidentId                  идентификатор обращения, статус которого изменить
      * @param changeIncidentStatusRequest модель запроса на изменение статуса обращения
      * @return полученное обращение с измененным статусом
      */

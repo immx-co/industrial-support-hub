@@ -1,7 +1,7 @@
 package com.immx.industrialsupport.supportservice.entities;
 
-import com.immx.industrialsupport.supportservice.dto.incident.IncidentPriority;
-import com.immx.industrialsupport.supportservice.dto.incident.IncidentStatus;
+import com.immx.industrialsupport.contracts.incident.IncidentPriority;
+import com.immx.industrialsupport.contracts.incident.IncidentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -94,13 +94,14 @@ public class Incident {
 
     /**
      * ctor класса <code>Incident</code>.
+     *
      * @param organization организация
-     * @param department подразделение организации
-     * @param reporter пользователь, создавший обращение
-     * @param title оглавление обращения
-     * @param description описание обращения
-     * @param priority приоритет обращения
-     * @param slaDeadline срок выполнения обращения
+     * @param department   подразделение организации
+     * @param reporter     пользователь, создавший обращение
+     * @param title        оглавление обращения
+     * @param description  описание обращения
+     * @param priority     приоритет обращения
+     * @param slaDeadline  срок выполнения обращения
      */
     public Incident(Organization organization,
                     Department department,

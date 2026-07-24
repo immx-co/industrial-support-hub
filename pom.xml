@@ -29,6 +29,7 @@
     </properties>
 
     <modules>
+        <module>support-contracts</module>
         <module>support-service</module>
     </modules>
 

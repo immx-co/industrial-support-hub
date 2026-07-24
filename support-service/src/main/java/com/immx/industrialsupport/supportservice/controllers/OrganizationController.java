@@ -1,8 +1,8 @@
 package com.immx.industrialsupport.supportservice.controllers;
 
-import com.immx.industrialsupport.supportservice.dto.common.IndustrialSupportResponseData;
-import com.immx.industrialsupport.supportservice.dto.organization.CreateOrganizationRequest;
-import com.immx.industrialsupport.supportservice.dto.organization.OrganizationResponse;
+import com.immx.industrialsupport.contracts.common.IndustrialSupportResponseData;
+import com.immx.industrialsupport.contracts.organization.CreateOrganizationRequest;
+import com.immx.industrialsupport.contracts.organization.OrganizationResponse;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 import com.immx.industrialsupport.supportservice.mappers.OrganizationMapper;
 import com.immx.industrialsupport.supportservice.services.organization.IOrganizationService;

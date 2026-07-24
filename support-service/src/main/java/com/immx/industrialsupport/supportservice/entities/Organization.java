@@ -62,7 +62,8 @@ public class Organization {
     @ToString.Include
     private OffsetDateTime updatedAt;
 
-    public Organization(String externalId, String name) {
+    public Organization(String externalId,
+                        String name) {
         this.externalId = externalId;
         this.name = name;
     }

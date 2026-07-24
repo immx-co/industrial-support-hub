@@ -1,9 +1,8 @@
 package com.immx.industrialsupport.supportservice.exception_handling.incident;
 
-import com.immx.industrialsupport.supportservice.dto.ErrorCode;
-import com.immx.industrialsupport.supportservice.dto.common.IncorrectResponseData;
+import com.immx.industrialsupport.contracts.common.ErrorCode;
+import com.immx.industrialsupport.contracts.common.IncorrectResponseData;
 import com.immx.industrialsupport.supportservice.exception_handling.ErrorCodeHttpStatusMapper;
-import com.immx.industrialsupport.supportservice.exception_handling.department.NotFoundDepartmentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

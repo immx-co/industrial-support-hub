@@ -1,7 +1,7 @@
 package com.immx.industrialsupport.supportservice.mappers;
 
-import com.immx.industrialsupport.supportservice.dto.department.DepartmentResponse;
-import com.immx.industrialsupport.supportservice.dto.department.DepartmentResponseWithoutId;
+import com.immx.industrialsupport.contracts.department.DepartmentResponse;
+import com.immx.industrialsupport.contracts.department.DepartmentResponseWithoutId;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import org.springframework.stereotype.Component;
 

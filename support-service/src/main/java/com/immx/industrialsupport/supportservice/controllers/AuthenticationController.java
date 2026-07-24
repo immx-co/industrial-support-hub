@@ -1,7 +1,7 @@
 package com.immx.industrialsupport.supportservice.controllers;
 
-import com.immx.industrialsupport.supportservice.dto.authorization.LoginRequest;
-import com.immx.industrialsupport.supportservice.dto.authorization.LoginResponse;
+import com.immx.industrialsupport.contracts.authorization.LoginRequest;
+import com.immx.industrialsupport.contracts.authorization.LoginResponse;
 import com.immx.industrialsupport.supportservice.services.authorization.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контроллер для работы с авторизацией.
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication")

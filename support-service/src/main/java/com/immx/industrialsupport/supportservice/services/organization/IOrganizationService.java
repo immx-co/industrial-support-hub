@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.services.organization;
 
-import com.immx.industrialsupport.supportservice.dto.organization.CreateOrganizationRequest;
+import com.immx.industrialsupport.contracts.organization.CreateOrganizationRequest;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 
 import java.util.List;
@@ -13,12 +13,14 @@ public interface IOrganizationService {
 
     /**
      * Получает все организации.
+     *
      * @return список всех организаций
      */
     List<Organization> getAll();
 
     /**
      * Получает организацию по ее идентификатору.
+     *
      * @param id идентификатор организации
      * @return полученная организация по идентификатору
      */
@@ -26,6 +28,7 @@ public interface IOrganizationService {
 
     /**
      * Получает организацию по имени.
+     *
      * @param organizationName имя организации
      * @return полученная организация по имени
      */
@@ -33,6 +36,7 @@ public interface IOrganizationService {
 
     /**
      * Создаёт организацию.
+     *
      * @param createOrganizationRequest модель запроса на создание организации
      * @return созданная организация
      */
@@ -40,6 +44,7 @@ public interface IOrganizationService {
 
     /**
      * Удаляет организацию по её идентификатору.
+     *
      * @param id идентификатор организации
      * @return удалённая организация по идентификатору
      */

@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.repositories;
 
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
+import com.immx.industrialsupport.contracts.role.RoleName;
 import com.immx.industrialsupport.supportservice.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,6 +16,7 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     /**
      * Получает роль по названию роли.
+     *
      * @param name название роли
      * @return полученная роль
      */
@@ -23,6 +24,7 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     /**
      * Получает все роли по коллекции названий ролей.
+     *
      * @param names коллекция названий ролей
      * @return список полученных ролей
      */

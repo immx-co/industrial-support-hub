@@ -1,8 +1,8 @@
 package com.immx.industrialsupport.supportservice.services.user;
 
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
-import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
-import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
+import com.immx.industrialsupport.contracts.role.RoleName;
+import com.immx.industrialsupport.contracts.user.CreateUserRequest;
+import com.immx.industrialsupport.contracts.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 import com.immx.industrialsupport.supportservice.entities.Role;
@@ -140,11 +140,9 @@ public class UserService implements IUserService {
         User user = userRepository.findByIdWithRoles(userId)
                 .orElseThrow(() -> new NotFoundUserException("There is no user with ID + " + userId));
 
-        Set<RoleName> roles = user.getRoles()
+        return user.getRoles()
                 .stream()
                 .map(Role::getName)
                 .collect(Collectors.toUnmodifiableSet());
-
-        return roles;
     }
 }

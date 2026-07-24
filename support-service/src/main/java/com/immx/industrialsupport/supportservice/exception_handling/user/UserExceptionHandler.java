@@ -1,7 +1,7 @@
 package com.immx.industrialsupport.supportservice.exception_handling.user;
 
-import com.immx.industrialsupport.supportservice.dto.ErrorCode;
-import com.immx.industrialsupport.supportservice.dto.common.IncorrectResponseData;
+import com.immx.industrialsupport.contracts.common.ErrorCode;
+import com.immx.industrialsupport.contracts.common.IncorrectResponseData;
 import com.immx.industrialsupport.supportservice.exception_handling.ErrorCodeHttpStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;

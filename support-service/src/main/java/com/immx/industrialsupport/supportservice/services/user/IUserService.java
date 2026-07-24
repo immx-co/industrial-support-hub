@@ -1,8 +1,8 @@
 package com.immx.industrialsupport.supportservice.services.user;
 
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
-import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
-import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
+import com.immx.industrialsupport.contracts.role.RoleName;
+import com.immx.industrialsupport.contracts.user.CreateUserRequest;
+import com.immx.industrialsupport.contracts.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.supportservice.entities.User;
 
 import java.util.List;
@@ -33,22 +33,26 @@ public interface IUserService {
     /**
      * Создаёт пользователя
      *
-     * @param departmentId идентификатор подразделения
+     * @param departmentId      идентификатор подразделения
      * @param createUserRequest тело модели запроса на создание пользователя
      * @return созданный пользователь
      */
-    User create(UUID departmentId, CreateUserRequest createUserRequest);
+    User create(UUID departmentId,
+                CreateUserRequest createUserRequest);
 
     /**
      * Обновляет роли у пользователя.
-     * @param userId идентификатор пользователя, у которого следует обновить роли
+     *
+     * @param userId                 идентификатор пользователя, у которого следует обновить роли
      * @param updateUserRolesRequest тело запроса на обновление ролей
      * @return обновленный пользователь
      */
-    User updateRoles(UUID userId, UpdateUserRolesRequest updateUserRolesRequest);
+    User updateRoles(UUID userId,
+                     UpdateUserRolesRequest updateUserRolesRequest);
 
     /**
      * Получает коллекцию ролей пользователя.
+     *
      * @param userId идентификатор пользователя, список ролей которого получить
      * @return коллекция ролей пользователя
      */

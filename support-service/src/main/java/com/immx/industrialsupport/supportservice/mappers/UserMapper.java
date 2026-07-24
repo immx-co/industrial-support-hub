@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.mappers;
 
-import com.immx.industrialsupport.supportservice.dto.user.UserResponse;
+import com.immx.industrialsupport.contracts.user.UserResponse;
 import com.immx.industrialsupport.supportservice.entities.Role;
 import com.immx.industrialsupport.supportservice.entities.User;
 import org.springframework.stereotype.Component;

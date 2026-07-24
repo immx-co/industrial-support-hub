@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.services.organization;
 
-import com.immx.industrialsupport.supportservice.dto.organization.CreateOrganizationRequest;
+import com.immx.industrialsupport.contracts.organization.CreateOrganizationRequest;
 import com.immx.industrialsupport.supportservice.entities.Organization;
 import com.immx.industrialsupport.supportservice.exception_handling.organization.DeletedOrganizationException;
 import com.immx.industrialsupport.supportservice.exception_handling.organization.NotFoundOrganizationException;

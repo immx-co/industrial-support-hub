@@ -1,6 +1,6 @@
 package com.immx.industrialsupport.supportservice.mappers;
 
-import com.immx.industrialsupport.supportservice.dto.incident.IncidentResponse;
+import com.immx.industrialsupport.contracts.incident.IncidentResponse;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import org.springframework.stereotype.Component;
 

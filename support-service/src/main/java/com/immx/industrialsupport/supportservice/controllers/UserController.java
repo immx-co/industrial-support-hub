@@ -1,10 +1,10 @@
 package com.immx.industrialsupport.supportservice.controllers;
 
-import com.immx.industrialsupport.supportservice.dto.common.IndustrialSupportResponseData;
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
-import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
-import com.immx.industrialsupport.supportservice.dto.user.UpdateUserRolesRequest;
-import com.immx.industrialsupport.supportservice.dto.user.UserResponse;
+import com.immx.industrialsupport.contracts.common.IndustrialSupportResponseData;
+import com.immx.industrialsupport.contracts.role.RoleName;
+import com.immx.industrialsupport.contracts.user.CreateUserRequest;
+import com.immx.industrialsupport.contracts.user.UpdateUserRolesRequest;
+import com.immx.industrialsupport.contracts.user.UserResponse;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.mappers.UserMapper;
 import com.immx.industrialsupport.supportservice.services.user.IUserService;

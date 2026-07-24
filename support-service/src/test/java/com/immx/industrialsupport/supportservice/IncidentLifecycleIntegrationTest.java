@@ -1,10 +1,10 @@
 package com.immx.industrialsupport.supportservice;
 
-import com.immx.industrialsupport.supportservice.dto.department.CreateDepartmentRequest;
-import com.immx.industrialsupport.supportservice.dto.incident.*;
-import com.immx.industrialsupport.supportservice.dto.organization.CreateOrganizationRequest;
-import com.immx.industrialsupport.supportservice.dto.role.RoleName;
-import com.immx.industrialsupport.supportservice.dto.user.CreateUserRequest;
+import com.immx.industrialsupport.contracts.department.CreateDepartmentRequest;
+import com.immx.industrialsupport.contracts.incident.*;
+import com.immx.industrialsupport.contracts.organization.CreateOrganizationRequest;
+import com.immx.industrialsupport.contracts.role.RoleName;
+import com.immx.industrialsupport.contracts.user.CreateUserRequest;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import com.immx.industrialsupport.supportservice.repositories.DepartmentRepository;
 import com.immx.industrialsupport.supportservice.repositories.IncidentRepository;
