@@ -4,6 +4,7 @@ import com.immx.industrialsupport.supportservice.dto.outbox.AggregateType;
 import com.immx.industrialsupport.supportservice.dto.outbox.OutboxEventType;
 import com.immx.industrialsupport.supportservice.entities.OutboxEvent;
 import com.immx.industrialsupport.supportservice.repositories.OutboxEventRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
@@ -23,6 +24,7 @@ public class OutboxService implements IOutboxService {
     @Autowired
     private JsonMapper jsonMapper;
 
+    @Transactional(Transactional.TxType.MANDATORY)
     public OutboxEvent save(AggregateType aggregateType,
                             UUID aggregateId,
                             OutboxEventType eventType,
