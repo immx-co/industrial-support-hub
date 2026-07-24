@@ -2,6 +2,8 @@ package com.immx.industrialsupport.supportservice.services.incident;
 
 import com.immx.industrialsupport.contracts.incident.*;
 import com.immx.industrialsupport.contracts.role.RoleName;
+import com.immx.industrialsupport.supportservice.dto.outbox.AggregateType;
+import com.immx.industrialsupport.supportservice.dto.outbox.OutboxEventType;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import com.immx.industrialsupport.supportservice.entities.Organization;
@@ -15,12 +17,14 @@ import com.immx.industrialsupport.supportservice.repositories.DepartmentReposito
 import com.immx.industrialsupport.supportservice.repositories.IncidentRepository;
 import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
+import com.immx.industrialsupport.supportservice.services.outbox.IOutboxService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -41,6 +45,9 @@ public class IncidentService implements IIncidentService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private IOutboxService outboxService;
 
     @Override
     public Incident create(UUID organizationId,
@@ -78,7 +85,31 @@ public class IncidentService implements IIncidentService {
                 createIncidentRequest.getPriority(),
                 slaDeadline);
 
-        return incidentRepository.save(incident);
+        Incident savedIncident = incidentRepository.save(incident);
+
+        Map<String, Object> payload = Map.of(
+                "incidentId",
+                savedIncident.getId(),
+                "organizationId",
+                organization.getId(),
+                "departmentId",
+                department.getId(),
+                "reporterId",
+                reporter.getId(),
+                "priority",
+                savedIncident.getPriority(),
+                "status",
+                savedIncident.getStatus(),
+                "createdAt",
+                OffsetDateTime.now());
+
+        outboxService.save(
+                AggregateType.INCIDENT,
+                savedIncident.getId(),
+                OutboxEventType.INCIDENT_CREATED,
+                payload);
+
+        return savedIncident;
     }
 
     @Override
@@ -136,7 +167,25 @@ public class IncidentService implements IIncidentService {
         incident.setAssignedEngineer(engineer);
         incident.setStatus(IncidentStatus.ASSIGNED);
 
-        return incidentRepository.save(incident);
+        Incident savedIncident = incidentRepository.save(incident);
+
+        Map<String, Object> payload = Map.of(
+                "incidentId",
+                savedIncident.getId(),
+                "organizationId",
+                organizationId,
+                "engineerId",
+                engineer.getId(),
+                "status",
+                savedIncident.getStatus());
+
+        outboxService.save(
+                AggregateType.INCIDENT,
+                savedIncident.getId(),
+                OutboxEventType.INCIDENT_ASSIGNED,
+                payload);
+
+        return savedIncident;
     }
 
     @Override
@@ -146,6 +195,7 @@ public class IncidentService implements IIncidentService {
         Incident incident = getById(
                 organizationId,
                 incidentId);
+        IncidentStatus previousStatus = incident.getStatus();
         IncidentStatus newStatus = changeIncidentStatusRequest.status();
 
         if(!isTransitionAllowed(
@@ -170,7 +220,25 @@ public class IncidentService implements IIncidentService {
             incident.setClosedAt(null);
         }
 
-        return incidentRepository.save(incident);
+        Incident savedIncident = incidentRepository.save(incident);
+
+        Map<String, Object> payload = Map.of(
+                "incidentId",
+                savedIncident.getId(),
+                "organizationId",
+                organizationId,
+                "previousStatus",
+                previousStatus,
+                "newStatus",
+                savedIncident.getStatus());
+
+        outboxService.save(
+                AggregateType.INCIDENT,
+                savedIncident.getId(),
+                OutboxEventType.INCIDENT_STATUS_CHANGED,
+                payload);
+
+        return savedIncident;
     }
 
     private OffsetDateTime calculateSlaDeadline(IncidentPriority priority) {

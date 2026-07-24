@@ -6,10 +6,7 @@ import com.immx.industrialsupport.contracts.organization.CreateOrganizationReque
 import com.immx.industrialsupport.contracts.role.RoleName;
 import com.immx.industrialsupport.contracts.user.CreateUserRequest;
 import com.immx.industrialsupport.supportservice.entities.Incident;
-import com.immx.industrialsupport.supportservice.repositories.DepartmentRepository;
-import com.immx.industrialsupport.supportservice.repositories.IncidentRepository;
-import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
-import com.immx.industrialsupport.supportservice.repositories.UserRepository;
+import com.immx.industrialsupport.supportservice.repositories.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +61,9 @@ public class IncidentLifecycleIntegrationTest {
 
     @Autowired
     private IncidentRepository incidentRepository;
+
+    @Autowired
+    private OutboxEventRepository outboxEventRepository;
 
     @Test
     @DisplayName("Успешный жизненный цикл обращения")
@@ -182,6 +182,7 @@ public class IncidentLifecycleIntegrationTest {
         assertThat(userRepository.count()).isEqualTo(3);
         assertThat(incidentRepository.count()).isEqualTo(1);
         assertThat(dispatcherId).isNotNull();
+        assertThat(outboxEventRepository.count()).isEqualTo(5);
     }
 
     private UUID createOrganization(String externalId,
