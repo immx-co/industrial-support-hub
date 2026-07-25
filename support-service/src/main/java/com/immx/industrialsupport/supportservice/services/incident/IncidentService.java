@@ -228,6 +228,15 @@ public class IncidentService implements IIncidentService {
         return savedIncident;
     }
 
+    @Override
+    public long deleteAll() {
+        long incidentsCount = incidentRepository.count();
+
+        incidentRepository.deleteAllInBatch();
+
+        return incidentsCount;
+    }
+
     private OffsetDateTime calculateSlaDeadline(IncidentPriority priority) {
         OffsetDateTime now = OffsetDateTime.now();
 

@@ -67,4 +67,11 @@ public interface IIncidentService {
                           UUID incidentId,
                           ChangeIncidentStatusRequest changeIncidentStatusRequest);
 
+    /**
+     * Удаляет все обращения из базы данных.
+     *
+     * @return количество удаленных обращений
+     */
+    long deleteAll();
+
 }

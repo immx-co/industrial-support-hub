@@ -161,4 +161,22 @@ public class IncidentController {
                 "Статус обращения успешно изменен",
                 response));
     }
+
+    /**
+     * Удаляет все обращения из базы данных.
+     *
+     * @return количество удалённых обращений
+     */
+    @DeleteMapping
+    @Operation(
+            summary = "Удаляет все обращения",
+            description = "Безвозвратно удаляет все обращения всех организаций"
+    )
+    public ResponseEntity<IndustrialSupportResponseData<Long>> deleteAll() {
+        long deletedCount = incidentService.deleteAll();
+
+        return ResponseEntity.ok(new IndustrialSupportResponseData<>(
+                "Все обращения успешно удалены",
+                deletedCount));
+    }
 }
