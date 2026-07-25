@@ -2,8 +2,11 @@ package com.immx.industrialsupport.supportservice.services.incident;
 
 import com.immx.industrialsupport.contracts.incident.*;
 import com.immx.industrialsupport.contracts.role.RoleName;
-import com.immx.industrialsupport.supportservice.dto.outbox.AggregateType;
-import com.immx.industrialsupport.supportservice.dto.outbox.OutboxEventType;
+import com.immx.industrialsupport.integrationcontracts.common.AggregateType;
+import com.immx.industrialsupport.integrationcontracts.common.EventType;
+import com.immx.industrialsupport.integrationcontracts.incident.IncidentAssignedEvent;
+import com.immx.industrialsupport.integrationcontracts.incident.IncidentCreatedEvent;
+import com.immx.industrialsupport.integrationcontracts.incident.IncidentStatusChangedEvent;
 import com.immx.industrialsupport.supportservice.entities.Department;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import com.immx.industrialsupport.supportservice.entities.Organization;
@@ -24,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -87,26 +89,19 @@ public class IncidentService implements IIncidentService {
 
         Incident savedIncident = incidentRepository.save(incident);
 
-        Map<String, Object> payload = Map.of(
-                "incidentId",
+        IncidentCreatedEvent payload = new IncidentCreatedEvent(
                 savedIncident.getId(),
-                "organizationId",
                 organization.getId(),
-                "departmentId",
                 department.getId(),
-                "reporterId",
                 reporter.getId(),
-                "priority",
                 savedIncident.getPriority(),
-                "status",
                 savedIncident.getStatus(),
-                "createdAt",
                 OffsetDateTime.now());
 
         outboxService.save(
                 AggregateType.INCIDENT,
                 savedIncident.getId(),
-                OutboxEventType.INCIDENT_CREATED,
+                EventType.INCIDENT_CREATED,
                 payload);
 
         return savedIncident;
@@ -169,20 +164,16 @@ public class IncidentService implements IIncidentService {
 
         Incident savedIncident = incidentRepository.save(incident);
 
-        Map<String, Object> payload = Map.of(
-                "incidentId",
+        IncidentAssignedEvent payload = new IncidentAssignedEvent(
                 savedIncident.getId(),
-                "organizationId",
                 organizationId,
-                "engineerId",
                 engineer.getId(),
-                "status",
                 savedIncident.getStatus());
 
         outboxService.save(
                 AggregateType.INCIDENT,
                 savedIncident.getId(),
-                OutboxEventType.INCIDENT_ASSIGNED,
+                EventType.INCIDENT_ASSIGNED,
                 payload);
 
         return savedIncident;
@@ -222,20 +213,16 @@ public class IncidentService implements IIncidentService {
 
         Incident savedIncident = incidentRepository.save(incident);
 
-        Map<String, Object> payload = Map.of(
-                "incidentId",
+        IncidentStatusChangedEvent payload = new IncidentStatusChangedEvent(
                 savedIncident.getId(),
-                "organizationId",
                 organizationId,
-                "previousStatus",
                 previousStatus,
-                "newStatus",
                 savedIncident.getStatus());
 
         outboxService.save(
                 AggregateType.INCIDENT,
                 savedIncident.getId(),
-                OutboxEventType.INCIDENT_STATUS_CHANGED,
+                EventType.INCIDENT_STATUS_CHANGED,
                 payload);
 
         return savedIncident;

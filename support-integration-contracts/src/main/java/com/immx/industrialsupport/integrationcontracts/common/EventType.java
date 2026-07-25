@@ -1,9 +1,9 @@
-package com.immx.industrialsupport.supportservice.dto.outbox;
+package com.immx.industrialsupport.integrationcontracts.common;
 
 /**
- * Перечисление описаний типов событий.
+ * Типы интеграционных событий.
  */
-public enum OutboxEventType {
+public enum EventType {
 
     /**
      * Обращение создано.

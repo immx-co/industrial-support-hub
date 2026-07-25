@@ -1,8 +1,8 @@
 package com.immx.industrialsupport.supportservice.entities;
 
-import com.immx.industrialsupport.supportservice.dto.outbox.AggregateType;
+import com.immx.industrialsupport.integrationcontracts.common.AggregateType;
+import com.immx.industrialsupport.integrationcontracts.common.EventType;
 import com.immx.industrialsupport.supportservice.dto.outbox.OutboxEventStatus;
-import com.immx.industrialsupport.supportservice.dto.outbox.OutboxEventType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -58,7 +58,7 @@ public class OutboxEvent {
             length = 100
     )
     @ToString.Include
-    private OutboxEventType eventType;
+    private EventType eventType;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(
@@ -113,7 +113,7 @@ public class OutboxEvent {
      */
     public OutboxEvent(AggregateType aggregateType,
                        UUID aggregateId,
-                       OutboxEventType eventType,
+                       EventType eventType,
                        String payload) {
         this.aggregateType = aggregateType;
         this.aggregateId = aggregateId;
@@ -141,6 +141,23 @@ public class OutboxEvent {
         status = OutboxEventStatus.FAILED;
         retryCount++;
         lastError = errorMessage;
+    }
+
+    /**
+     * Помечает событие как упавшее, ориентируясь на количество попыток.
+     *
+     * @param errorMessage строка ошибки при публикации
+     * @param maxRetries   максимальное количество попыток публикации
+     */
+    public void registerFailure(String errorMessage,
+                                int maxRetries) {
+        retryCount++;
+        lastError = errorMessage;
+
+        if(retryCount >= maxRetries)
+            status = OutboxEventStatus.FAILED;
+        else
+            status = OutboxEventStatus.NEW;
     }
 
     /**

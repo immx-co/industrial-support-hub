@@ -30,6 +30,7 @@
 
     <modules>
         <module>support-contracts</module>
+        <module>support-integration-contracts</module>
         <module>support-service</module>
     </modules>
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.immx.industrialsupport</groupId>
+        <artifactId>industrial-support-hub</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>support-integration-contracts</artifactId>
+    <packaging>jar</packaging>
+
+    <name>support-integration-contracts</name>
+    <description>Kafka contracts for Industrial Support Hub</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.immx.industrialsupport</groupId>
+            <artifactId>support-contracts</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
