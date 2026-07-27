@@ -92,6 +92,16 @@ public class Incident {
     @ToString.Include
     private Long version;
 
+    @Column(
+            name = "sla_breached",
+            nullable = false
+    )
+    @ToString.Include
+    private boolean slaBreached;
+
+    @Column(name = "sla_breached_at")
+    private OffsetDateTime slaBreachedAt;
+
     /**
      * ctor класса <code>Incident</code>.
      *
@@ -118,5 +128,18 @@ public class Incident {
         this.priority = priority;
         this.slaDeadline = slaDeadline;
         this.status = IncidentStatus.NEW;
+    }
+
+    /**
+     * Помечает обращение как просроченное.
+     *
+     * @param breachedAt время, в которое было просрочено обращение
+     */
+    public void markSlaAsBreached(OffsetDateTime breachedAt) {
+        if(slaBreached)
+            return;
+
+        slaBreached = true;
+        slaBreachedAt = breachedAt;
     }
 }

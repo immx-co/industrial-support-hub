@@ -16,5 +16,7 @@ public record IncidentResponse(UUID id,
                                OffsetDateTime resolvedAt,
                                OffsetDateTime closedAt,
                                OffsetDateTime createdAt,
-                               OffsetDateTime updatedAt) {
+                               OffsetDateTime updatedAt,
+                               boolean slaBreached,
+                               OffsetDateTime slaBreachedAt) {
 }

@@ -37,7 +37,9 @@ public class IncidentMapper {
                 incident.getResolvedAt(),
                 incident.getClosedAt(),
                 incident.getCreatedAt(),
-                incident.getUpdatedAt());
+                incident.getUpdatedAt(),
+                incident.isSlaBreached(),
+                incident.getSlaBreachedAt());
     }
 
     /**

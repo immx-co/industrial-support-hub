@@ -19,4 +19,9 @@ public enum EventType {
      * Статус обращения изменен.
      */
     INCIDENT_STATUS_CHANGED,
+
+    /**
+     * Срок <code>SLA</code> обращения истек.
+     */
+    INCIDENT_SLA_BREACHED,
 }
