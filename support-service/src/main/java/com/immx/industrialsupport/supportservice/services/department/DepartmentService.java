@@ -8,6 +8,7 @@ import com.immx.industrialsupport.supportservice.exception_handling.department.N
 import com.immx.industrialsupport.supportservice.exception_handling.organization.NotFoundOrganizationException;
 import com.immx.industrialsupport.supportservice.repositories.DepartmentRepository;
 import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 /**
  * Сервис для работы с подразделениями организации.
  */
+@Slf4j
 @Service
 public class DepartmentService implements IDepartmentService {
 
@@ -42,6 +44,11 @@ public class DepartmentService implements IDepartmentService {
         if(department.isEmpty())
             throw new NotFoundDepartmentException("There is no department with ID = " + departmentId);
 
+        log.info(
+                "Получено подразделение с идентификатором {}",
+                department.get()
+                        .getId());
+
         return department.get();
     }
 
@@ -49,6 +56,8 @@ public class DepartmentService implements IDepartmentService {
     public List<Department> getAllByOrganizationId(UUID organizationId) {
         if(!organizationRepository.existsById(organizationId))
             throw new NotFoundOrganizationException("There is not organization with ID = " + organizationId);
+
+        log.info("Получены все подразделения по идентификатору организации.");
 
         return departmentRepository.findAllByOrganizationId(organizationId);
     }
@@ -77,6 +86,10 @@ public class DepartmentService implements IDepartmentService {
                 organization.get(),
                 createDepartmentRequest.getExternalId(),
                 departmentName);
+
+        log.info(
+                "Подразделение создано успешно, его идентификатор = {}",
+                department.getId());
 
         return departmentRepository.save(department);
     }

@@ -29,8 +29,6 @@ public class SlaMonitoringScheduler {
     public void monitorSla() {
         long startedAt = System.nanoTime();
 
-        log.info("Поиск просроченных обращений запущен.");
-
         int processedCount = slaMonitoringService.processOverdueIncidents();
 
         long durationMs = (System.nanoTime() - startedAt) / 1_000_000;

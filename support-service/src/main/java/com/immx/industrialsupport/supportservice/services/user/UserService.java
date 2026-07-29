@@ -16,6 +16,7 @@ import com.immx.industrialsupport.supportservice.repositories.OrganizationReposi
 import com.immx.industrialsupport.supportservice.repositories.RoleRepository;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Сервис для работы с пользователями
  */
+@Slf4j
 @Service
 public class UserService implements IUserService {
 
@@ -54,6 +56,10 @@ public class UserService implements IUserService {
         if(department.isEmpty())
             throw new NotFoundDepartmentException("There is not department with ID = " + departmentId);
 
+        log.info(
+                "Пользователи подразделения с идентификатором {} получены.",
+                departmentId);
+
         return userRepository.findAllByDepartment(departmentId);
     }
 
@@ -63,6 +69,10 @@ public class UserService implements IUserService {
 
         if(organization.isEmpty())
             throw new NotFoundOrganizationException("There is not organization with ID = " + organizationId);
+
+        log.info(
+                "Пользователи организации с идентификатором {} получены.",
+                organizationId);
 
         return userRepository.findAllByOrganization(organizationId);
     }
@@ -107,6 +117,15 @@ public class UserService implements IUserService {
         user.getRoles()
                 .addAll(roles);
 
+        log.info(
+                "Пользователь с идентификатором {} организации {} подразделения {} успешно создан.",
+                user.getId(),
+                user.getDepartment()
+                        .getName(),
+                user.getDepartment()
+                        .getOrganization()
+                        .getName());
+
         return userRepository.save(user);
     }
 
@@ -132,6 +151,10 @@ public class UserService implements IUserService {
                 .getRoles()
                 .addAll(roles);
 
+        log.info(
+                "Роли пользователя с идентификатором {} успешно обновлены.",
+                userId);
+
         return userRepository.save(user.get());
     }
 
@@ -139,6 +162,10 @@ public class UserService implements IUserService {
     public Set<RoleName> getRoles(UUID userId) {
         User user = userRepository.findByIdWithRoles(userId)
                 .orElseThrow(() -> new NotFoundUserException("There is no user with ID + " + userId));
+
+        log.info(
+                "Роли пользователя с идентификатором {} успешно получены.",
+                userId);
 
         return user.getRoles()
                 .stream()

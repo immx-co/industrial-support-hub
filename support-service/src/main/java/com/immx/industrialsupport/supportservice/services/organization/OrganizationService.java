@@ -5,6 +5,7 @@ import com.immx.industrialsupport.supportservice.entities.Organization;
 import com.immx.industrialsupport.supportservice.exception_handling.organization.DeletedOrganizationException;
 import com.immx.industrialsupport.supportservice.exception_handling.organization.NotFoundOrganizationException;
 import com.immx.industrialsupport.supportservice.repositories.OrganizationRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 /**
  * Сервис для работы с организациями.
  */
+@Slf4j
 @Service
 public class OrganizationService implements IOrganizationService {
 
@@ -33,6 +35,11 @@ public class OrganizationService implements IOrganizationService {
         if(organization.isEmpty())
             throw new NotFoundOrganizationException("This is no such organization with ID = " + id);
 
+        log.info(
+                "Организация с идентификатором {} получена.",
+                organization.get()
+                        .getId());
+
         return organization.get();
     }
 
@@ -43,6 +50,10 @@ public class OrganizationService implements IOrganizationService {
         if(organization.isEmpty())
             throw new NotFoundOrganizationException("This is no such organization with Name = " + organizationName);
 
+        log.info(
+                "Организация с именем {} получена.",
+                organizationName);
+
         return organization.get();
     }
 
@@ -51,6 +62,10 @@ public class OrganizationService implements IOrganizationService {
         Organization organization = new Organization(
                 createOrganizationRequest.getExternalId(),
                 createOrganizationRequest.getName());
+
+        log.info(
+                "Организация с идентификатором {} успешно сохранена.",
+                organization.getId());
 
         return organizationRepository.save(organization);
     }
@@ -63,6 +78,10 @@ public class OrganizationService implements IOrganizationService {
             throw new DeletedOrganizationException("This is no such organization with ID = " + id);
 
         organizationRepository.deleteById(id);
+
+        log.info(
+                "Организация с идентификатором {} успешно удалена.",
+                id);
 
         return deletedOrganization.get();
     }

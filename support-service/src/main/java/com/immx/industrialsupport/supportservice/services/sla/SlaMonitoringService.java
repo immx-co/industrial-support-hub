@@ -7,6 +7,7 @@ import com.immx.industrialsupport.integrationcontracts.incident.IncidentSlaBreac
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import com.immx.industrialsupport.supportservice.repositories.IncidentRepository;
 import com.immx.industrialsupport.supportservice.services.outbox.IOutboxService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import java.util.Set;
 /**
  * Сервис по отслеживанию истекших обращений.
  */
+@Slf4j
 @Service
 public class SlaMonitoringService implements ISlaMonitoringService {
 
@@ -73,6 +75,10 @@ public class SlaMonitoringService implements ISlaMonitoringService {
                     EventType.INCIDENT_SLA_BREACHED,
                     payload);
         }
+
+        log.info(
+                "Найдено {} просроченных обращения.",
+                overdueIncidents.size());
 
         return overdueIncidents.size();
     }

@@ -22,16 +22,19 @@ import com.immx.industrialsupport.supportservice.repositories.OrganizationReposi
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
 import com.immx.industrialsupport.supportservice.services.outbox.IOutboxService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Сервис для работы с обращениями.
  */
+@Slf4j
 @Service
 @Transactional
 public class IncidentService implements IIncidentService {
@@ -104,18 +107,31 @@ public class IncidentService implements IIncidentService {
                 EventType.INCIDENT_CREATED,
                 payload);
 
+        log.info(
+                "Обращение успешно создано {}, идентификатор обращения {}",
+                reporter.getId(),
+                incident.getId());
+
         return savedIncident;
     }
 
     @Override
     public Incident getById(UUID organizationId,
                             UUID incidentId) {
-        return incidentRepository.findByIdAndOrganization_Id(
-                        incidentId,
-                        organizationId)
-                .orElseThrow(() -> new NotFoundIncidentException(
-                        "There is no incident with ID = " + incidentId + " in organization with ID = "
-                                + organizationId));
+        Optional<Incident> incident = incidentRepository.findByIdAndOrganization_Id(
+                incidentId,
+                organizationId);
+
+        if(incident.isEmpty())
+            throw new NotFoundIncidentException(
+                    "There is no incident with ID = " + incidentId + " in organization with ID = " + organizationId);
+
+        log.info(
+                "Обращение успешно получено с идентификатором {}",
+                incident.get()
+                        .getId());
+
+        return incident.get();
     }
 
     @Override
@@ -123,7 +139,11 @@ public class IncidentService implements IIncidentService {
         if(!organizationRepository.existsById(organizationId))
             throw new NotFoundOrganizationException("There is no organization with ID = " + organizationId);
 
-        return incidentRepository.findAllByOrganization_Id(organizationId);
+        List<Incident> incidents = incidentRepository.findAllByOrganization_Id(organizationId);
+
+        log.info("Список обращений успешно получен.");
+
+        return incidents;
     }
 
     @Override
@@ -176,6 +196,11 @@ public class IncidentService implements IIncidentService {
                 EventType.INCIDENT_ASSIGNED,
                 payload);
 
+        log.info(
+                "Инженер {} успешно назначен на выполнение обращения {}",
+                engineer.getId(),
+                incident.getId());
+
         return savedIncident;
     }
 
@@ -187,16 +212,9 @@ public class IncidentService implements IIncidentService {
                 organizationId,
                 incidentId);
         IncidentStatus previousStatus = incident.getStatus();
-        IncidentStatus newStatus = changeIncidentStatusRequest.status();
-
-        if(!isTransitionAllowed(
-                incident.getStatus(),
-                newStatus))
-            throw new InvalidIncidentOperationException(
-                    "Transition from " + incident.getStatus() + " to " + newStatus + " is not allowed");
-
-        if(newStatus == IncidentStatus.IN_PROGRESS && incident.getAssignedEngineer() == null)
-            throw new InvalidIncidentOperationException("Incident cannot be started without an assigned engineer");
+        IncidentStatus newStatus = getIncidentStatus(
+                changeIncidentStatusRequest,
+                incident);
 
         incident.setStatus(newStatus);
 
@@ -225,7 +243,29 @@ public class IncidentService implements IIncidentService {
                 EventType.INCIDENT_STATUS_CHANGED,
                 payload);
 
+        log.info(
+                "Статус обращения {} успешно изменен с {} на {}.",
+                savedIncident.getId(),
+                previousStatus,
+                newStatus);
+
         return savedIncident;
+    }
+
+    private IncidentStatus getIncidentStatus(ChangeIncidentStatusRequest changeIncidentStatusRequest,
+                                             Incident incident) {
+        IncidentStatus newStatus = changeIncidentStatusRequest.status();
+
+        if(!isTransitionAllowed(
+                incident.getStatus(),
+                newStatus))
+            throw new InvalidIncidentOperationException(
+                    "Transition from " + incident.getStatus() + " to " + newStatus + " is not allowed");
+
+        if(newStatus == IncidentStatus.IN_PROGRESS && incident.getAssignedEngineer() == null)
+            throw new InvalidIncidentOperationException("Incident cannot be started without an assigned engineer");
+
+        return newStatus;
     }
 
     @Override
@@ -233,6 +273,10 @@ public class IncidentService implements IIncidentService {
         long incidentsCount = incidentRepository.count();
 
         incidentRepository.deleteAllInBatch();
+
+        log.info(
+                "Успешно удалены все {} обращения.",
+                incidentsCount);
 
         return incidentsCount;
     }

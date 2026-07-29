@@ -5,6 +5,7 @@ import com.immx.industrialsupport.integrationcontracts.common.EventType;
 import com.immx.industrialsupport.supportservice.entities.OutboxEvent;
 import com.immx.industrialsupport.supportservice.repositories.OutboxEventRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
@@ -15,6 +16,7 @@ import java.util.UUID;
 /**
  * Сервис отправки событий.
  */
+@Slf4j
 @Service
 public class OutboxService implements IOutboxService {
 
@@ -37,6 +39,10 @@ public class OutboxService implements IOutboxService {
                     aggregateId,
                     eventType,
                     serializedPayload);
+
+            log.info(
+                    "Событие с идентификатором {} успешно сохранено.",
+                    event.getId());
 
             return outboxEventRepository.save(event);
         } catch(JacksonException ex) {

@@ -4,6 +4,7 @@ import com.immx.industrialsupport.contracts.authorization.LoginRequest;
 import com.immx.industrialsupport.contracts.authorization.LoginResponse;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 /**
  * Сервис авторизации.
  */
+@Slf4j
 @Service
 public class AuthenticationService {
 
@@ -46,6 +48,10 @@ public class AuthenticationService {
             throw new BadCredentialsException("Invalid username or password");
 
         String accessToken = jwtService.generateAccessToken(user);
+
+        log.info(
+                "{} успешно авторизован.",
+                loginRequest.getUsername());
 
         return new LoginResponse(
                 accessToken,

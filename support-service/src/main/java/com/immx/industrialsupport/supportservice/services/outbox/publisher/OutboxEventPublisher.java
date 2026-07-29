@@ -4,6 +4,7 @@ import com.immx.industrialsupport.integrationcontracts.common.EventEnvelope;
 import com.immx.industrialsupport.supportservice.dto.outbox.OutboxEventStatus;
 import com.immx.industrialsupport.supportservice.entities.OutboxEvent;
 import com.immx.industrialsupport.supportservice.repositories.OutboxEventRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,6 +19,7 @@ import java.util.UUID;
 /**
  * Публикует события из таблицы <code>Outbox</code> в <code>Kafka</code>.
  */
+@Slf4j
 @Service
 public class OutboxEventPublisher {
 
@@ -38,6 +40,7 @@ public class OutboxEventPublisher {
 
     /**
      * Публикует указанное <code>Outbox</code> событие в <code>Kafka</code>.
+     *
      * @param eventId идентификатор публикуемого <code>Outbox</code> события
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -66,6 +69,10 @@ public class OutboxEventPublisher {
                                     .toString(),
                             envelope)
                     .get();
+
+            log.info(
+                    "Событие с идентификатором {} успешно опубликовано в Kafka.",
+                    event.getId());
 
             event.markAsPublished();
         } catch(InterruptedException ex) {
