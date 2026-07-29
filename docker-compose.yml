@@ -36,5 +36,30 @@ services:
     depends_on:
       - kafka
 
+  support-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+    image: industrial-support-hub/support-service:${APP_VERSION:-dev}
+    container_name: industrial-support-service
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://host.docker.internal:5432/support_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   kafka-data:
