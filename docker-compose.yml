@@ -39,7 +39,7 @@ services:
   support-service:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: support-service/Dockerfile
       args:
         APP_VERSION: ${APP_VERSION:-dev}
     image: industrial-support-hub/support-service:${APP_VERSION:-dev}
@@ -56,6 +56,28 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     depends_on:
       - kafka
+    restart: unless-stopped
+
+  notification-worker:
+    build:
+      context: .
+      dockerfile: notification-worker/Dockerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+
+    image: industrial-support-hub/notification-worker:${APP_VERSION:-dev}
+    container_name: industrial-support-notification-worker
+
+    environment:
+      NOTIFICATION_DB_URL: jdbc:postgresql://host.docker.internal:5432/notification_db
+      NOTIFICATION_DB_USERNAME: postgres
+      NOTIFICATION_DB_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
+
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    
+    depends_on:
+      - kafka
+
     restart: unless-stopped
 
 volumes:

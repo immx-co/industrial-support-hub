@@ -23,6 +23,10 @@
 6. Система сохраняет историю изменений и публикует интеграционные события.
 7. В дальнейшем система будет контролировать SLA, отправлять уведомления и запускать автоматическую диагностику.
 
-Собрать сервис: `docker compose --env-file .env --env-file version.env build support-service`
+Собрать сервисы: 
+
+support-service: `docker compose --env-file .env --env-file version.env build support-service`
+
+notification-worker: `docker compose --env-file version.env --env-file .env.local build notification-worker`
 
 Запустить сервисы: `docker compose --env-file .env --env-file version.env up --no-build`
