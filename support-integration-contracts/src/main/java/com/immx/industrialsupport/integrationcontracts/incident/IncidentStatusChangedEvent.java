@@ -9,11 +9,13 @@ import java.util.UUID;
  *
  * @param incidentId     идентификатор обращения
  * @param organizationId идентификатор организации
+ * @param reporterId     идентификатор заявителя
  * @param previousStatus статус обращения до изменения
  * @param newStatus      статус обращения после изменения
  */
 public record IncidentStatusChangedEvent(UUID incidentId,
                                          UUID organizationId,
+                                         UUID reporterId,
                                          IncidentStatus previousStatus,
                                          IncidentStatus newStatus) {
 }

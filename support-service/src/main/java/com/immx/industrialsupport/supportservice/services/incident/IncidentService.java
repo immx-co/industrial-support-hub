@@ -234,6 +234,8 @@ public class IncidentService implements IIncidentService {
         IncidentStatusChangedEvent payload = new IncidentStatusChangedEvent(
                 savedIncident.getId(),
                 organizationId,
+                savedIncident.getReporter()
+                        .getId(),
                 previousStatus,
                 savedIncident.getStatus());
 

@@ -40,11 +40,13 @@ public class OutboxService implements IOutboxService {
                     eventType,
                     serializedPayload);
 
+            OutboxEvent savedOutboxEvent = outboxEventRepository.save(event);
+
             log.info(
                     "Событие с идентификатором {} успешно сохранено.",
-                    event.getId());
+                    savedOutboxEvent.getId());
 
-            return outboxEventRepository.save(event);
+            return savedOutboxEvent;
         } catch(JacksonException ex) {
             throw new IllegalStateException(
                     "Could not serialize outbox event payload",
