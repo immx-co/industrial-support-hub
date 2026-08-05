@@ -42,4 +42,9 @@ public class CreateUserRequest {
     private String lastName;
 
     private Set<RoleName> roles;
+
+    @Size(max = 100)
+    private String telegramUsername;
+
+    private Long telegramChatId;
 }

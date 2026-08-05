@@ -10,6 +10,7 @@ import com.immx.industrialsupport.notificationworker.dto.NotificationChannel;
 import com.immx.industrialsupport.notificationworker.dto.NotificationRecipientType;
 import com.immx.industrialsupport.notificationworker.entities.Notification;
 import com.immx.industrialsupport.notificationworker.repositories.NotificationRepository;
+import com.immx.industrialsupport.notificationworker.services.notification.sender.INotificationSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Сервис по отправке уведомлений о произошедших событиях, которые хранятся в <code>Kafka</code>.
@@ -31,6 +32,25 @@ public class NotificationService implements INotificationService {
 
     @Autowired
     private JsonMapper jsonMapper;
+
+    private Map<NotificationChannel, INotificationSender> senders = Map.of();
+
+    @Autowired
+    public void configureSenders(List<INotificationSender> notificationSenders) {
+        EnumMap<NotificationChannel, INotificationSender> sendersByChannel = new EnumMap<>(NotificationChannel.class);
+
+        for(INotificationSender sender : notificationSenders) {
+            INotificationSender previousSender = sendersByChannel.put(
+                    sender.getChannel(),
+                    sender);
+
+            if(previousSender != null)
+                throw new IllegalStateException(
+                        "Для канала " + sender.getChannel() + " зарегистрировано несколько отправителей");
+        }
+
+        senders = Collections.unmodifiableMap(sendersByChannel);
+    }
 
     /**
      * {@inheritDoc}
@@ -137,38 +157,60 @@ public class NotificationService implements INotificationService {
                                     String recipientValue,
                                     String subject,
                                     String message) {
-        boolean alreadyExists = notificationRepository.existsByEventIdAndRecipientTypeAndRecipientValueAndChannel(
-                envelope.eventId(),
-                recipientType,
-                recipientValue,
-                NotificationChannel.LOG);
-
-        if(alreadyExists) {
-            log.info(
-                    "Событие {} для получателя {} уже обработано.",
+        for(NotificationChannel channel : EnumSet.of(
+                NotificationChannel.LOG,
+                NotificationChannel.TELEGRAM)) {
+            boolean alreadyExists = notificationRepository.existsByEventIdAndRecipientTypeAndRecipientValueAndChannel(
                     envelope.eventId(),
-                    recipientValue);
-            return;
+                    recipientType,
+                    recipientValue,
+                    channel);
+
+            if(alreadyExists) {
+                log.info(
+                        "Событие {} для получателя {} и канала {} уже обработано.",
+                        envelope.eventId(),
+                        recipientValue,
+                        channel);
+                return;
+            }
+
+            Notification notification = Notification.create(
+                    envelope.eventId(),
+                    envelope.eventType(),
+                    organizationId,
+                    incidentId,
+                    recipientType,
+                    recipientValue,
+                    channel,
+                    subject,
+                    message);
+
+            Notification savedNotification = notificationRepository.save(notification);
+
+            try {
+                INotificationSender sender = getSender(channel);
+
+                sender.send(savedNotification);
+                savedNotification.markAsSent();
+            } catch(Exception ex) {
+                savedNotification.registerFailure(ex);
+
+                log.error(
+                        "Ошибка отправки уведомления {} через {}",
+                        savedNotification.getId(),
+                        channel,
+                        ex);
+            }
         }
+    }
 
-        Notification notification = Notification.create(
-                envelope.eventId(),
-                envelope.eventType(),
-                organizationId,
-                incidentId,
-                recipientType,
-                recipientValue,
-                subject,
-                message);
+    private INotificationSender getSender(NotificationChannel channel) {
+        INotificationSender sender = senders.get(channel);
 
-        notificationRepository.save(notification);
+        if(sender == null)
+            throw new IllegalStateException("Не зарегистрирован отправитель для канала " + channel);
 
-        log.info(
-                "Уведомление отправлено. Получатель: {}, тема: {}, сообщение: {}",
-                recipientValue,
-                subject,
-                message);
-
-        notification.markAsSent();
+        return sender;
     }
 }

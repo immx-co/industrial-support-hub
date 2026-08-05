@@ -39,7 +39,8 @@ public class UserMapper {
                 user.getRoles()
                         .stream()
                         .map(Role::getName)
-                        .collect(Collectors.toSet()));
+                        .collect(Collectors.toSet()),
+                user.getTelegramUsername());
     }
 
     /**

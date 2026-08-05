@@ -115,16 +115,27 @@ public class User {
     )
     private OffsetDateTime updatedAt;
 
+    @Column(
+            name = "telegram_username",
+            length = 100
+    )
+    private String telegramUsername;
+
+    @Column(name = "telegram_chat_id")
+    private Long telegramChatId;
+
     /**
      * ctor класса <code>User</code>.
      *
-     * @param department   подразделение сотрудника
-     * @param externalId   внутренний идентификатор сотрудника
-     * @param username     имя пользователя сотрудника
-     * @param email        адрес электронной почты сотрудника
-     * @param passwordHash хэшированный пароль сотрудника
-     * @param firstName    имя сотрудника
-     * @param lastName     фамилия сотрудника
+     * @param department       подразделение сотрудника
+     * @param externalId       внутренний идентификатор сотрудника
+     * @param username         имя пользователя сотрудника
+     * @param email            адрес электронной почты сотрудника
+     * @param passwordHash     хэшированный пароль сотрудника
+     * @param firstName        имя сотрудника
+     * @param lastName         фамилия сотрудника
+     * @param telegramUsername Имя пользователя в телеграм.
+     * @param telegramChatId   Идентификатор чата в телеграм.
      */
     public User(Department department,
                 String externalId,
@@ -132,7 +143,9 @@ public class User {
                 String email,
                 String passwordHash,
                 String firstName,
-                String lastName) {
+                String lastName,
+                String telegramUsername,
+                Long telegramChatId) {
         this.department = department;
         this.externalId = externalId;
         this.username = username;
@@ -140,5 +153,7 @@ public class User {
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.telegramUsername = telegramUsername;
+        this.telegramChatId = telegramChatId;
     }
 }

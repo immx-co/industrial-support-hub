@@ -102,7 +102,9 @@ public class UserService implements IUserService {
                 createUserRequest.getEmail(),
                 passwordEncoder.encode(createUserRequest.getPassword()),
                 createUserRequest.getFirstName(),
-                createUserRequest.getLastName());
+                createUserRequest.getLastName(),
+                createUserRequest.getTelegramUsername(),
+                createUserRequest.getTelegramChatId());
 
         Set<RoleName> requestedRoleNames = createUserRequest.getRoles();
 

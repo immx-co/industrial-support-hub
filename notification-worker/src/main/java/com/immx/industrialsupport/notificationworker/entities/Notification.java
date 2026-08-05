@@ -110,6 +110,7 @@ public class Notification {
                                       UUID incidentId,
                                       NotificationRecipientType recipientType,
                                       String recipientValue,
+                                      NotificationChannel channel,
                                       String subject,
                                       String message) {
         Notification notification = new Notification();
@@ -120,7 +121,7 @@ public class Notification {
         notification.incidentId = incidentId;
         notification.recipientType = recipientType;
         notification.recipientValue = recipientValue;
-        notification.channel = NotificationChannel.LOG;
+        notification.channel = channel;
         notification.status = NotificationStatus.PENDING;
         notification.subject = subject;
         notification.message = message;
