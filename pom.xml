@@ -33,6 +33,7 @@
         <module>support-integration-contracts</module>
         <module>support-service</module>
         <module>notification-worker</module>
+        <module>support-web-ui</module>
     </modules>
 
 </project>
