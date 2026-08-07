@@ -235,7 +235,9 @@ public class IncidentLifecycleIntegrationTest {
                 "123",
                 firstName,
                 lastName,
-                Set.of(role));
+                Set.of(role),
+                null,
+                null);
 
         MvcResult result = mockMvc.perform(post(
                         "/api/v1/users/departments/{departmentId}",

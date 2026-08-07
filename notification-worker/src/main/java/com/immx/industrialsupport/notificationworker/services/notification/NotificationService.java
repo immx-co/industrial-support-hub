@@ -172,7 +172,7 @@ public class NotificationService implements INotificationService {
                         envelope.eventId(),
                         recipientValue,
                         channel);
-                return;
+                continue;
             }
 
             Notification notification = Notification.create(

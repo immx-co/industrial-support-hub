@@ -37,7 +37,7 @@ public class IncidentEventConsumer {
                     });
 
             log.info(
-                    "получено событие {} типа {}",
+                    "Получено событие {} типа {}",
                     event.eventId(),
                     event.eventType());
 
