@@ -1,4 +1,4 @@
-package com.immx.industrialsupport.webui.configuration;
+package com.immx.industrialsupport.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

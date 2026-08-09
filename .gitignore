@@ -18,3 +18,8 @@ target/
 # Operating systems
 .DS_Store
 Thumbs.db
+
+# Vaadin generated frontend
+**/src/main/frontend/generated/
+**/node_modules/
+**/vite.generated.ts
