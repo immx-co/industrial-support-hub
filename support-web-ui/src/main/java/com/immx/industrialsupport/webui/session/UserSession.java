@@ -15,9 +15,7 @@ public class UserSession {
     }
 
     public boolean isAuthenticated() {
-        return loginResponse != null
-               && loginResponse.accessToken() != null
-               && !loginResponse.accessToken()
+        return loginResponse != null && loginResponse.accessToken() != null && !loginResponse.accessToken()
                 .isBlank();
     }
 
@@ -33,6 +31,13 @@ public class UserSession {
             return null;
 
         return loginResponse.tokenType() + " " + loginResponse.accessToken();
+    }
+
+    public String getUsername() {
+        if(!isAuthenticated())
+            return null;
+
+        return loginResponse.username();
     }
 
     public void logout() {

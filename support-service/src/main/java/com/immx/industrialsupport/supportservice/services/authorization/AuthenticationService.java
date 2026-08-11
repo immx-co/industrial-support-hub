@@ -55,6 +55,7 @@ public class AuthenticationService {
 
         return new LoginResponse(
                 accessToken,
-                "Bearer");
+                "Bearer",
+                user.getUsername());
     }
 }

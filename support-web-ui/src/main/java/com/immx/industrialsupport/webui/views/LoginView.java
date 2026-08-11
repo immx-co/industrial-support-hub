@@ -32,7 +32,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     @Autowired
     private UserSession userSession;
 
-    private final TextField departmentIdField = new TextField("Department ID");
+    private final TextField departmentIdField = new TextField("Идентификатор подразделения");
 
     private final TextField usernameField = new TextField("Логин");
 
