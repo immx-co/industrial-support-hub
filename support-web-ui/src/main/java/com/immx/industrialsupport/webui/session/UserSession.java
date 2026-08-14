@@ -4,6 +4,8 @@ import com.immx.industrialsupport.contracts.authorization.LoginResponse;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @VaadinSessionScope
 public class UserSession {
@@ -38,6 +40,27 @@ public class UserSession {
             return null;
 
         return loginResponse.username();
+    }
+
+    public UUID getUserId() {
+        if(!isAuthenticated())
+            return null;
+
+        return loginResponse.userId();
+    }
+
+    public UUID getOrganizationId() {
+        if(!isAuthenticated())
+            return null;
+
+        return loginResponse.organizationId();
+    }
+
+    public UUID getDepartmentId() {
+        if(!isAuthenticated())
+            return null;
+
+        return loginResponse.departmentId();
     }
 
     public void logout() {

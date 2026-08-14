@@ -56,6 +56,12 @@ public class AuthenticationService {
         return new LoginResponse(
                 accessToken,
                 "Bearer",
+                user.getId(),
+                user.getDepartment()
+                        .getOrganization()
+                        .getId(),
+                user.getDepartment()
+                        .getId(),
                 user.getUsername());
     }
 }

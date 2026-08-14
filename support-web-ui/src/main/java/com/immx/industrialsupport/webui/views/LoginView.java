@@ -49,7 +49,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if(userSession.isAuthenticated())
-            event.forwardTo(MainView.class);
+            event.forwardTo(CreateIncidentView.class);
     }
 
     private void configureLayout() {
@@ -121,7 +121,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
             userSession.authenticate(response);
 
             UI.getCurrent()
-                    .navigate(MainView.class);
+                    .navigate(CreateIncidentView.class);
         } catch(RestClientResponseException ex) {
             authenticationFailed("Неверный Department ID, логин или пароль");
         } catch(RestClientException ex) {
