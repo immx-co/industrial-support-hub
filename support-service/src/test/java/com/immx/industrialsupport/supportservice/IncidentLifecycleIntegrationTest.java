@@ -69,6 +69,12 @@ public class IncidentLifecycleIntegrationTest {
     @Test
     @DisplayName("Успешный жизненный цикл обращения")
     void shouldCompleteIncidentLifecycle() throws Exception {
+        long organizationsBefore = organizationRepository.count();
+        long departmentsBefore = departmentRepository.count();
+        long usersBefore = userRepository.count();
+        long incidentsBefore = incidentRepository.count();
+        long outboxEventsBefore = outboxEventRepository.count();
+
         UUID organizationId = createOrganization(
                 "ORG-001",
                 "ООО Промышленное предприятие");
@@ -180,12 +186,12 @@ public class IncidentLifecycleIntegrationTest {
                 .getId()).isEqualTo(engineerId);
         assertThat(storedIncident.getResolvedAt()).isNotNull();
         assertThat(storedIncident.getClosedAt()).isNotNull();
-        assertThat(organizationRepository.count()).isEqualTo(1);
-        assertThat(departmentRepository.count()).isEqualTo(2);
-        assertThat(userRepository.count()).isEqualTo(3);
-        assertThat(incidentRepository.count()).isEqualTo(1);
+        assertThat(organizationRepository.count()).isEqualTo(organizationsBefore + 1);
+        assertThat(departmentRepository.count()).isEqualTo(departmentsBefore + 2);
+        assertThat(userRepository.count()).isEqualTo(usersBefore + 3);
+        assertThat(incidentRepository.count()).isEqualTo(incidentsBefore + 1);
         assertThat(dispatcherId).isNotNull();
-        assertThat(outboxEventRepository.count()).isEqualTo(5);
+        assertThat(outboxEventRepository.count()).isEqualTo(outboxEventsBefore + 5);
     }
 
     private UUID createOrganization(String externalId,
