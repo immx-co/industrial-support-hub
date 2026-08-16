@@ -30,6 +30,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -118,7 +119,8 @@ public class IncidentLifecycleIntegrationTest {
 
         MvcResult createIncidentResult = mockMvc.perform(post(
                         "/api/v1/organizations/{organizationId}/incidents",
-                        organizationId).contentType(MediaType.APPLICATION_JSON)
+                        organizationId).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(incidentRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errorCode").value("SUCCESS"))
@@ -135,7 +137,8 @@ public class IncidentLifecycleIntegrationTest {
         mockMvc.perform(patch(
                         "/api/v1/organizations/{organizationId}/incidents/{incidentId}/assignment",
                         organizationId,
-                        incidentId).contentType(MediaType.APPLICATION_JSON)
+                        incidentId).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(assignmentRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status").value("ASSIGNED"))
@@ -159,7 +162,7 @@ public class IncidentLifecycleIntegrationTest {
         mockMvc.perform(get(
                         "/api/v1/organizations/{organizationId}/incidents/{incidentId}",
                         organizationId,
-                        incidentId))
+                        incidentId).with(jwt()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status").value("CLOSED"))
                 .andExpect(jsonPath("$.data.reporterId").value(employeeId.toString()))
@@ -191,7 +194,8 @@ public class IncidentLifecycleIntegrationTest {
                 externalId,
                 name);
 
-        MvcResult result = mockMvc.perform(post("/api/v1/organizations").contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(post("/api/v1/organizations").with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errorCode").value("SUCCESS"))
@@ -210,7 +214,8 @@ public class IncidentLifecycleIntegrationTest {
 
         MvcResult result = mockMvc.perform(post(
                         "/api/v1/organizations/{organizationId}/departments",
-                        organizationId).contentType(MediaType.APPLICATION_JSON)
+                        organizationId).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errorCode").value("SUCCESS"))
@@ -241,7 +246,8 @@ public class IncidentLifecycleIntegrationTest {
 
         MvcResult result = mockMvc.perform(post(
                         "/api/v1/users/departments/{departmentId}",
-                        departmentId).contentType(MediaType.APPLICATION_JSON)
+                        departmentId).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errorCode").value("SUCCESS"))
@@ -263,7 +269,8 @@ public class IncidentLifecycleIntegrationTest {
         return mockMvc.perform(patch(
                         "/api/v1/organizations/{organizationId}/incidents/{incidentId}/status",
                         organizationId,
-                        incidentId).contentType(MediaType.APPLICATION_JSON)
+                        incidentId).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errorCode").value("SUCCESS"))
@@ -280,5 +287,19 @@ public class IncidentLifecycleIntegrationTest {
                 .asText();
 
         return UUID.fromString(id);
+    }
+
+    @Test
+    @DisplayName("Запрос без JWT возвращает 401")
+    void shouldRejectRequestWithoutJwt() throws Exception {
+        mockMvc.perform(get("/api/v1/organizations/"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Запрос с JWT проходит проверку аутентификации")
+    void shouldAcceptRequestWithJwt() throws Exception {
+        mockMvc.perform(get("/api/v1/organizations").with(jwt()))
+                .andExpect(status().isOk());
     }
 }

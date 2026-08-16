@@ -2,6 +2,7 @@ package com.immx.industrialsupport.supportservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,18 +21,20 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(
-                                        "/api/v1/auth/**",
-                                        "/swagger",
-                                        "/swagger/**",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/actuator/health",
-                                        "/error")
-                                .permitAll()
-                                .anyRequest()
-                                .permitAll()
-                        //                        .authenticated()
-                )
+                                "/api/v1/auth/**",
+                                "/swagger",
+                                "/swagger/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/actuator/health",
+                                "/error")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/v1/auth/login")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
                 .build();
     }
