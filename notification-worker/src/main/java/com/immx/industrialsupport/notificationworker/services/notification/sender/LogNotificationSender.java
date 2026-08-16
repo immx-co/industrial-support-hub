@@ -20,8 +20,9 @@ public class LogNotificationSender implements INotificationSender {
     @Override
     public void send(Notification notification) {
         log.info(
-                "Уведомление отправлено. Получатель: {}, тема: {}, сообщение: {}",
+                "Уведомление отправлено. Тип получателя: {}, получатель: {}, тема: {}, сообщение: {}",
                 notification.getRecipientType(),
+                notification.getRecipientValue(),
                 notification.getSubject(),
                 notification.getMessage());
     }

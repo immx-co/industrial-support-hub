@@ -1,5 +1,8 @@
 package com.immx.industrialsupport.contracts.authorization;
 
+import com.immx.industrialsupport.contracts.role.RoleName;
+
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -11,11 +14,13 @@ import java.util.UUID;
  * @param organizationId идентификатор организации пользователя
  * @param departmentId   идентификатор подразделения пользователя
  * @param username       логин пользователя
+ * @param roles          роли пользователя
  */
 public record LoginResponse(String accessToken,
                             String tokenType,
                             UUID userId,
                             UUID organizationId,
                             UUID departmentId,
-                            String username) {
+                            String username,
+                            Set<RoleName> roles) {
 }

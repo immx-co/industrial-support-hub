@@ -2,6 +2,7 @@ package com.immx.industrialsupport.supportservice.services.authorization;
 
 import com.immx.industrialsupport.contracts.authorization.LoginRequest;
 import com.immx.industrialsupport.contracts.authorization.LoginResponse;
+import com.immx.industrialsupport.supportservice.entities.Role;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Сервис авторизации.
@@ -62,6 +64,10 @@ public class AuthenticationService {
                         .getId(),
                 user.getDepartment()
                         .getId(),
-                user.getUsername());
+                user.getUsername(),
+                user.getRoles()
+                        .stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toUnmodifiableSet()));
     }
 }

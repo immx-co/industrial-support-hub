@@ -36,7 +36,10 @@ public class TelegramNotificationSender implements INotificationSender {
     @Override
     public void send(Notification notification) {
         try {
-            String text = notification.getSubject() + System.lineSeparator() + System.lineSeparator()
+            String text =
+                    notification.getSubject() + System.lineSeparator() + System.lineSeparator() + "Тип получателя: "
+                    + getRecipientTypeLabel(notification) + System.lineSeparator() + "Получатель: "
+                    + notification.getRecipientValue() + System.lineSeparator() + System.lineSeparator()
                     + notification.getMessage();
 
             String requestBody = jsonMapper.writeValueAsString(Map.of(
@@ -73,5 +76,12 @@ public class TelegramNotificationSender implements INotificationSender {
                     "Не удалось отправить Telegram уведомление",
                     ex);
         }
+    }
+
+    private String getRecipientTypeLabel(Notification notification) {
+        return switch(notification.getRecipientType()) {
+            case USER -> "пользователь";
+            case ROLE -> "роль";
+        };
     }
 }
