@@ -78,6 +78,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public User create(UUID departmentId,
                        CreateUserRequest createUserRequest) {
         Optional<Department> department = departmentRepository.findById(departmentId);

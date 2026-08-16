@@ -298,7 +298,7 @@ public class IncidentLifecycleIntegrationTest {
     @Test
     @DisplayName("Запрос без JWT возвращает 401")
     void shouldRejectRequestWithoutJwt() throws Exception {
-        mockMvc.perform(get("/api/v1/organizations/"))
+        mockMvc.perform(get("/api/v1/organizations"))
                 .andExpect(status().isUnauthorized());
     }
 

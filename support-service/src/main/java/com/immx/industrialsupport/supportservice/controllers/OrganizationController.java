@@ -38,7 +38,7 @@ public class OrganizationController {
      *
      * @return список всех организаций
      */
-    @GetMapping("/")
+    @GetMapping()
     @Operation(
             summary = "Получить все организации",
             description = "Возвращает список всех организаций"
