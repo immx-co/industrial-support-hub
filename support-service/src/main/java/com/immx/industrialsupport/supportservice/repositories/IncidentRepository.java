@@ -48,4 +48,63 @@ public interface IncidentRepository extends JpaRepository<Incident, UUID> {
     List<Incident> findOverdueIncidents(@Param("now") OffsetDateTime now,
                                         @Param("statuses") Collection<IncidentStatus> statuses,
                                         Pageable pageable);
+
+
+    @EntityGraph(attributePaths = { "organization", "department", "reporter", "assignedEngineer" })
+    @Query(
+            """
+                    SELECT incident
+                    FROM Incident incident
+                    WHERE incident.organization.id = :organizationId
+                    AND incident.status IN (:statuses)
+                    ORDER BY incident.createdAt DESC
+                    """
+    )
+    List<Incident> findActiveByOrganization(@Param("organizationId") UUID organizationId,
+                                            @Param("statuses") Collection<IncidentStatus> statuses);
+
+    @Query(
+            """
+                    SELECT incident
+                    FROM Incident incident
+                    WHERE incident.organization.id = :organizationId
+                    AND incident.reporter.id = :reporterId
+                    AND incident.status IN (:statuses)
+                    ORDER BY incident.createdAt DESC
+                    """
+    )
+    @EntityGraph(attributePaths = { "organization", "department", "reporter", "assignedEngineer" })
+    List<Incident> findActiveByReporter(@Param("organizationId") UUID organizationId,
+                                        @Param("reporterId") UUID reporterId,
+                                        @Param("statuses") Collection<IncidentStatus> statuses);
+
+    @Query(
+            """
+                    SELECT incident
+                    FROM Incident incident
+                    WHERE incident.organization.id = :organizationId
+                    AND incident.department.id = :departmentId
+                    AND incident.status IN (:statuses)
+                    ORDER BY incident.createdAt DESC
+                    """
+    )
+    @EntityGraph(attributePaths = { "organization", "department", "reporter", "assignedEngineer" })
+    List<Incident> findActiveByDepartment(@Param("organizationId") UUID organizationId,
+                                          @Param("departmentId") UUID departmentId,
+                                          @Param("statuses") Collection<IncidentStatus> statuses);
+
+    @Query(
+            """
+                    SELECT incident
+                    FROM Incident incident
+                    WHERE incident.organization.id = :organizationId
+                    AND incident.assignedEngineer.id = :engineerId
+                    AND incident.status IN (:statuses)
+                    ORDER BY incident.createdAt DESC
+                    """
+    )
+    @EntityGraph(attributePaths = { "organization", "department", "reporter", "assignedEngineer" })
+    List<Incident> findActiveByAssignedEngineer(@Param("organizationId") UUID organizationId,
+                                                @Param("engineerId") UUID engineerId,
+                                                @Param("statuses") Collection<IncidentStatus> statuses);
 }

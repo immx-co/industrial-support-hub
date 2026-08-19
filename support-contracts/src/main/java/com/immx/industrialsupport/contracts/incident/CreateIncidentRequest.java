@@ -17,12 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateIncidentRequest {
 
-    @NotNull
-    private UUID departmentId;
-
-    @NotNull
-    private UUID reporterId;
-
     @NotBlank
     @Size(max = 200)
     private String title;

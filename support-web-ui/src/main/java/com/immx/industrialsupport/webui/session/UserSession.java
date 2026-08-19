@@ -1,9 +1,11 @@
 package com.immx.industrialsupport.webui.session;
 
 import com.immx.industrialsupport.contracts.authorization.LoginResponse;
+import com.immx.industrialsupport.contracts.role.RoleName;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -61,6 +63,17 @@ public class UserSession {
             return null;
 
         return loginResponse.departmentId();
+    }
+
+    public Set<RoleName> getRoles() {
+        if(!isAuthenticated() || loginResponse.roles() == null)
+            return Set.of();
+
+        return Set.copyOf(loginResponse.roles());
+    }
+
+    public boolean hasRole(RoleName role) {
+        return getRoles().contains(role);
     }
 
     public void logout() {

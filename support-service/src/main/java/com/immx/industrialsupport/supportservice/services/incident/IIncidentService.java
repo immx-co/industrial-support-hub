@@ -3,10 +3,12 @@ package com.immx.industrialsupport.supportservice.services.incident;
 import com.immx.industrialsupport.contracts.incident.AssignIncidentRequest;
 import com.immx.industrialsupport.contracts.incident.ChangeIncidentStatusRequest;
 import com.immx.industrialsupport.contracts.incident.CreateIncidentRequest;
+import com.immx.industrialsupport.contracts.role.RoleName;
 import com.immx.industrialsupport.supportservice.entities.Incident;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -19,10 +21,14 @@ public interface IIncidentService {
      * Создаёт обращение.
      *
      * @param organizationId идентификатор организации, в которой создаётся обращение.
+     * @param departmentId   идентификатор подразделения организации, пользователь которой создаёт обращение.
+     * @param reporterId     идентификатор пользователя, который создаёт обращение.
      * @param request        модель запроса на создание обращения.
      * @return созданное обращение.
      */
     Incident create(UUID organizationId,
+                    UUID departmentId,
+                    UUID reporterId,
                     CreateIncidentRequest request);
 
     /**
@@ -73,5 +79,19 @@ public interface IIncidentService {
      * @return количество удаленных обращений
      */
     long deleteAll();
+
+    /**
+     * Получает активные обращения, фильтруя по идентификатору организации, подразделения, пользователя и ролей.
+     *
+     * @param organizationId идентификатор организации
+     * @param departmentId   идентификатор подразделения
+     * @param userId         идентификатор пользователя
+     * @param roles          множество ролей
+     * @return отфильтрованный список обращений.
+     */
+    List<Incident> getActiveForUser(UUID organizationId,
+                                    UUID departmentId,
+                                    UUID userId,
+                                    Set<RoleName> roles);
 
 }

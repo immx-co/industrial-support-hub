@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
@@ -29,6 +30,19 @@ public class AuthenticationExceptionHandler {
         IncorrectResponseData<Void> response = new IncorrectResponseData<>(
                 errorCode,
                 "Invalid username or password",
+                null);
+
+        return ResponseEntity.status(errorCodeHttpStatusMapper.map(errorCode))
+                .body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<IncorrectResponseData<Void>> handleAccessDeniedException(AccessDeniedException exception) {
+        ErrorCode errorCode = ErrorCode.FORBIDDEN;
+
+        IncorrectResponseData<Void> response = new IncorrectResponseData<>(
+                errorCode,
+                exception.getMessage(),
                 null);
 
         return ResponseEntity.status(errorCodeHttpStatusMapper.map(errorCode))

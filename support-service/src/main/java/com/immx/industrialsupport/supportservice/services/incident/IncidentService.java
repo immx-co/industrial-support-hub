@@ -27,9 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Сервис для работы с обращениями.
@@ -54,8 +52,16 @@ public class IncidentService implements IIncidentService {
     @Autowired
     private IOutboxService outboxService;
 
+    private static final Set<IncidentStatus> ACTIVE_STATUSES = Set.of(
+            IncidentStatus.NEW,
+            IncidentStatus.ASSIGNED,
+            IncidentStatus.IN_PROGRESS,
+            IncidentStatus.RESOLVED);
+
     @Override
     public Incident create(UUID organizationId,
+                           UUID departmentId,
+                           UUID reporterId,
                            CreateIncidentRequest createIncidentRequest) {
         Organization organization = organizationRepository.findById(organizationId)
                 .orElseThrow(() -> new NotFoundOrganizationException(
@@ -63,13 +69,13 @@ public class IncidentService implements IIncidentService {
 
         Department department = departmentRepository.findByIdAndOrganizationId(
                         organizationId,
-                        createIncidentRequest.getDepartmentId())
+                        departmentId)
                 .orElseThrow(() -> new NotFoundDepartmentException(
-                        "There is not department with ID = " + createIncidentRequest.getDepartmentId()));
+                        "There is not department with ID = " + departmentId));
 
-        User reporter = userRepository.findByIdWithRoles(createIncidentRequest.getReporterId())
+        User reporter = userRepository.findByIdWithRoles(reporterId)
                 .orElseThrow(() -> new NotFoundUserException(
-                        "There is no user with ID = " + createIncidentRequest.getReporterId()));
+                        "There is no user with ID = " + reporterId));
 
         if(!reporter.getDepartment()
                 .getId()
@@ -281,6 +287,59 @@ public class IncidentService implements IIncidentService {
                 incidentsCount);
 
         return incidentsCount;
+    }
+
+    @Override
+    public List<Incident> getActiveForUser(UUID organizationId,
+                                           UUID departmentId,
+                                           UUID userId,
+                                           Set<RoleName> roles) {
+        if(!organizationRepository.existsById(organizationId))
+            throw new NotFoundOrganizationException("There is not organization with ID = " + organizationId);
+
+        if(roles.contains(RoleName.ROLE_ADMIN) || roles.contains(RoleName.ROLE_MANAGER)) {
+            return incidentRepository.findActiveByOrganization(
+                    organizationId,
+                    ACTIVE_STATUSES);
+        }
+
+        Map<UUID, Incident> incidents = new LinkedHashMap<>();
+
+        if(roles.contains(RoleName.ROLE_DISPATCHER)) {
+            incidentRepository.findActiveByDepartment(
+                            organizationId,
+                            departmentId,
+                            ACTIVE_STATUSES)
+                    .forEach(incident -> incidents.put(
+                            incident.getId(),
+                            incident));
+        }
+
+        if(roles.contains(RoleName.ROLE_ENGINEER)) {
+            incidentRepository.findActiveByAssignedEngineer(
+                            organizationId,
+                            userId,
+                            ACTIVE_STATUSES)
+                    .forEach(incident -> incidents.put(
+                            incident.getId(),
+                            incident));
+        }
+
+        if(roles.contains(RoleName.ROLE_EMPLOYEE)) {
+            incidentRepository.findActiveByReporter(
+                            organizationId,
+                            userId,
+                            ACTIVE_STATUSES)
+                    .forEach(incident -> incidents.put(
+                            incident.getId(),
+                            incident));
+        }
+
+        return incidents.values()
+                .stream()
+                .sorted(Comparator.comparing(Incident::getCreatedAt)
+                        .reversed())
+                .toList();
     }
 
     private OffsetDateTime calculateSlaDeadline(IncidentPriority priority) {

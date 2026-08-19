@@ -272,8 +272,6 @@ public class CreateIncidentView extends VerticalLayout implements BeforeEnterObs
 
         try {
             CreateIncidentRequest request = new CreateIncidentRequest(
-                    userSession.getDepartmentId(),
-                    userSession.getUserId(),
                     titleField.getValue()
                             .trim(),
                     descriptionField.getValue()
@@ -281,7 +279,6 @@ public class CreateIncidentView extends VerticalLayout implements BeforeEnterObs
                     prioritySelect.getValue());
 
             IndustrialSupportResponseData<IncidentResponse> response = incidentClient.createIncident(
-                    userSession.getOrganizationId(),
                     request,
                     userSession.getAccessToken());
 

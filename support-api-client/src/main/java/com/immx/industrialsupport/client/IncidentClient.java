@@ -9,7 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Клиент для работы с обращениями.
@@ -23,18 +23,14 @@ public class IncidentClient {
     /**
      * Создаёт новое обращение в указанной организации.
      *
-     * @param organizationId идентификатор организации
-     * @param request        данные создаваемого обращения
-     * @param accessToken    токен текущего пользователя
+     * @param request     данные создаваемого обращения
+     * @param accessToken токен текущего пользователя
      * @return ответ сервиса с созданным обращением.
      */
-    public IndustrialSupportResponseData<IncidentResponse> createIncident(UUID organizationId,
-                                                                          CreateIncidentRequest request,
+    public IndustrialSupportResponseData<IncidentResponse> createIncident(CreateIncidentRequest request,
                                                                           String accessToken) {
         IndustrialSupportResponseData<IncidentResponse> response = restClient.post()
-                .uri(
-                        "/api/v1/organizations/{organizationId}/incidents",
-                        organizationId)
+                .uri("/api/v1/incidents")
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(request)
@@ -44,6 +40,26 @@ public class IncidentClient {
 
         if(response == null)
             throw new IllegalStateException("Support Service returned an empty incident response.");
+
+        return response;
+    }
+
+    /**
+     * Получает активные обращения, фильтруя по идентификатору организации, подразделения, пользователя и ролей.
+     *
+     * @param accessToken токен текущего пользователя
+     * @return ответ сервиса с активными отфильтрованными обращениями.
+     */
+    public IndustrialSupportResponseData<List<IncidentResponse>> getActiveIncidents(String accessToken) {
+        IndustrialSupportResponseData<List<IncidentResponse>> response = restClient.get()
+                .uri("/api/v1/incidents/active")
+                .headers(headers -> headers.setBearerAuth(accessToken))
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+
+        if(response == null)
+            throw new IllegalStateException("Support Service returned an empty active incidents response.");
 
         return response;
     }
