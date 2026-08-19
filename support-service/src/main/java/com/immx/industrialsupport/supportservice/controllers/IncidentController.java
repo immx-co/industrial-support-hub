@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,17 @@ public class IncidentController {
      * @param createIncidentRequest запрос на создание обращения
      * @return созданное обращение
      */
+    @PreAuthorize(
+            """
+                        hasAnyAuthority(
+                            'ROLE_EMPLOYEE',
+                            'ROLE_DISPATCHER',
+                            'ROLE_ENGINEER',
+                            'ROLE_MANAGER',
+                            'ROLE_ADMIN'
+                        )
+                    """
+    )
     @PostMapping
     @Operation(
             summary = "Создаёт обращение",
@@ -71,6 +83,14 @@ public class IncidentController {
      *
      * @return список обращений организации
      */
+    @PreAuthorize(
+            """
+                    hasAnyAuthority(
+                        'ROLE_MANAGER',
+                        'ROLE_ADMIN'
+                    )
+                    """
+    )
     @GetMapping
     @Operation(
             summary = "Получает все обращения организации",
@@ -118,6 +138,14 @@ public class IncidentController {
      * @param assignIncidentRequest запрос на назначение инженера на обращение
      * @return назначенное на инженера обращение
      */
+    @PreAuthorize(
+            """
+                    hasAnyAuthority(
+                        'ROLE_DISPATCHER',
+                        'ROLE_ADMIN'
+                    )
+                    """
+    )
     @PatchMapping("/{incidentId}/assignment")
     @Operation(
             summary = "Назначает инженера на обращение",
@@ -145,6 +173,16 @@ public class IncidentController {
      * @param request    запрос на изменение статуса обращения
      * @return обращение с измененным статусом
      */
+    @PreAuthorize(
+            """
+                    hasAnyAuthority(
+                        'ROLE_EMPLOYEE',
+                        'ROLE_DISPATCHER',
+                        'ROLE_ENGINEER',
+                        'ROLE_ADMIN'
+                    )
+                    """
+    )
     @PatchMapping("/{incidentId}/status")
     @Operation(
             summary = "Изменяет статус обращения",
@@ -170,6 +208,7 @@ public class IncidentController {
      *
      * @return количество удалённых обращений
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping
     @Operation(
             summary = "Удаляет все обращения",
@@ -183,6 +222,22 @@ public class IncidentController {
                 deletedCount));
     }
 
+    /**
+     * Получает доступные активные обращения.
+     *
+     * @return доступные активные обращения, отфильтрованные относительно роли запрашиваемого.
+     */
+    @PreAuthorize(
+            """
+                    hasAnyAuthority(
+                        'ROLE_EMPLOYEE',
+                        'ROLE_DISPATCHER',
+                        'ROLE_ENGINEER',
+                        'ROLE_MANAGER',
+                        'ROLE_ADMIN'
+                    )
+                    """
+    )
     @GetMapping("/active")
     @Operation(
             summary = "Получает доступные активные обращения",
@@ -193,7 +248,6 @@ public class IncidentController {
 
         List<Incident> incidents = incidentService.getActiveForUser(
                 currentUser.organizationId(),
-                currentUser.departmentId(),
                 currentUser.userId(),
                 currentUser.roles());
 

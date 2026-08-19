@@ -84,13 +84,11 @@ public interface IIncidentService {
      * Получает активные обращения, фильтруя по идентификатору организации, подразделения, пользователя и ролей.
      *
      * @param organizationId идентификатор организации
-     * @param departmentId   идентификатор подразделения
      * @param userId         идентификатор пользователя
      * @param roles          множество ролей
      * @return отфильтрованный список обращений.
      */
     List<Incident> getActiveForUser(UUID organizationId,
-                                    UUID departmentId,
                                     UUID userId,
                                     Set<RoleName> roles);
 

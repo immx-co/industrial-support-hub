@@ -74,8 +74,7 @@ public class IncidentService implements IIncidentService {
                         "There is not department with ID = " + departmentId));
 
         User reporter = userRepository.findByIdWithRoles(reporterId)
-                .orElseThrow(() -> new NotFoundUserException(
-                        "There is no user with ID = " + reporterId));
+                .orElseThrow(() -> new NotFoundUserException("There is no user with ID = " + reporterId));
 
         if(!reporter.getDepartment()
                 .getId()
@@ -291,29 +290,19 @@ public class IncidentService implements IIncidentService {
 
     @Override
     public List<Incident> getActiveForUser(UUID organizationId,
-                                           UUID departmentId,
                                            UUID userId,
                                            Set<RoleName> roles) {
         if(!organizationRepository.existsById(organizationId))
             throw new NotFoundOrganizationException("There is not organization with ID = " + organizationId);
 
-        if(roles.contains(RoleName.ROLE_ADMIN) || roles.contains(RoleName.ROLE_MANAGER)) {
+        if(roles.contains(RoleName.ROLE_ADMIN) || roles.contains(RoleName.ROLE_MANAGER)
+           || roles.contains(RoleName.ROLE_DISPATCHER)) {
             return incidentRepository.findActiveByOrganization(
                     organizationId,
                     ACTIVE_STATUSES);
         }
 
         Map<UUID, Incident> incidents = new LinkedHashMap<>();
-
-        if(roles.contains(RoleName.ROLE_DISPATCHER)) {
-            incidentRepository.findActiveByDepartment(
-                            organizationId,
-                            departmentId,
-                            ACTIVE_STATUSES)
-                    .forEach(incident -> incidents.put(
-                            incident.getId(),
-                            incident));
-        }
 
         if(roles.contains(RoleName.ROLE_ENGINEER)) {
             incidentRepository.findActiveByAssignedEngineer(

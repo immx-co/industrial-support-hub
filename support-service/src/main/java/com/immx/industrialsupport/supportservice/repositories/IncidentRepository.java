@@ -83,21 +83,6 @@ public interface IncidentRepository extends JpaRepository<Incident, UUID> {
                     SELECT incident
                     FROM Incident incident
                     WHERE incident.organization.id = :organizationId
-                    AND incident.department.id = :departmentId
-                    AND incident.status IN (:statuses)
-                    ORDER BY incident.createdAt DESC
-                    """
-    )
-    @EntityGraph(attributePaths = { "organization", "department", "reporter", "assignedEngineer" })
-    List<Incident> findActiveByDepartment(@Param("organizationId") UUID organizationId,
-                                          @Param("departmentId") UUID departmentId,
-                                          @Param("statuses") Collection<IncidentStatus> statuses);
-
-    @Query(
-            """
-                    SELECT incident
-                    FROM Incident incident
-                    WHERE incident.organization.id = :organizationId
                     AND incident.assignedEngineer.id = :engineerId
                     AND incident.status IN (:statuses)
                     ORDER BY incident.createdAt DESC
