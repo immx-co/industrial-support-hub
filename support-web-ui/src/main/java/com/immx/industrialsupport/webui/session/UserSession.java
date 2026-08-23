@@ -5,6 +5,7 @@ import com.immx.industrialsupport.contracts.role.RoleName;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,8 +20,14 @@ public class UserSession {
     }
 
     public boolean isAuthenticated() {
-        return loginResponse != null && loginResponse.accessToken() != null && !loginResponse.accessToken()
-                .isBlank();
+        if(loginResponse == null || loginResponse.accessToken() == null || loginResponse.accessToken()
+                .isBlank() || loginResponse.expiresAt() == null || !Instant.now()
+                .isBefore(loginResponse.expiresAt())) {
+            logout();
+            return false;
+        }
+
+        return true;
     }
 
     public String getAccessToken() {
@@ -28,6 +35,13 @@ public class UserSession {
             return null;
 
         return loginResponse.accessToken();
+    }
+
+    public Instant getExpiresAt() {
+        if(!isAuthenticated())
+            return null;
+
+        return loginResponse.expiresAt();
     }
 
     public String getAuthorizationHeader() {

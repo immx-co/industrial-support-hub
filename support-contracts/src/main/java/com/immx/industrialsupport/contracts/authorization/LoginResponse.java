@@ -2,6 +2,7 @@ package com.immx.industrialsupport.contracts.authorization;
 
 import com.immx.industrialsupport.contracts.role.RoleName;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
  *
  * @param accessToken    токен доступа авторизованного пользователя
  * @param tokenType      тип токена
+ * @param expiresAt      Момент окончания действия токена
  * @param userId         идентификатор пользователя
  * @param organizationId идентификатор организации пользователя
  * @param departmentId   идентификатор подразделения пользователя
@@ -18,6 +20,7 @@ import java.util.UUID;
  */
 public record LoginResponse(String accessToken,
                             String tokenType,
+                            Instant expiresAt,
                             UUID userId,
                             UUID organizationId,
                             UUID departmentId,

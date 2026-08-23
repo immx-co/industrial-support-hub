@@ -5,10 +5,7 @@ import com.immx.industrialsupport.supportservice.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -27,7 +24,7 @@ public class JwtService {
     @Value("${security.jwt.access-token-ttl}")
     private Duration accessTokenTtl;
 
-    public String generateAccessToken(User user) {
+    public Jwt generateAccessToken(User user) {
         Instant issuedAt = Instant.now();
         Instant expiresAt = issuedAt.plus(accessTokenTtl);
 
@@ -67,8 +64,7 @@ public class JwtService {
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(
-                        header,
-                        claims))
-                .getTokenValue();
+                header,
+                claims));
     }
 }

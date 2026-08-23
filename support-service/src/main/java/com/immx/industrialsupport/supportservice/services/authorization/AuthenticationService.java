@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -49,15 +50,16 @@ public class AuthenticationService {
                 user.getPasswordHash()))
             throw new BadCredentialsException("Invalid username or password");
 
-        String accessToken = jwtService.generateAccessToken(user);
+        Jwt accessToken = jwtService.generateAccessToken(user);
 
         log.info(
                 "{} успешно авторизован.",
                 loginRequest.getUsername());
 
         return new LoginResponse(
-                accessToken,
+                accessToken.getTokenValue(),
                 "Bearer",
+                accessToken.getExpiresAt(),
                 user.getId(),
                 user.getDepartment()
                         .getOrganization()

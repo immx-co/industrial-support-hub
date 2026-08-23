@@ -5,22 +5,34 @@ import com.immx.industrialsupport.webui.views.ActiveIncidentsView;
 import com.immx.industrialsupport.webui.views.CreateIncidentView;
 import com.immx.industrialsupport.webui.views.LoginView;
 import com.immx.industrialsupport.webui.views.ProfileView;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
+
+import java.time.Instant;
+import java.util.concurrent.ScheduledFuture;
 
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     @Autowired
     private UserSession userSession;
+
+    @Autowired
+    private TaskScheduler taskScheduler;
+
+    private ScheduledFuture<?> automaticLogoutTask;
 
     private final Button createIncidentButton = new Button("Создать обращение");
 
@@ -79,6 +91,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         logoutButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         logoutButton.addClickListener(event -> {
+            cancelAutomaticLogout();
             userSession.logout();
 
             UI.getCurrent()
@@ -185,5 +198,54 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
             button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         }
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+
+        scheduleAutomaticLogout(attachEvent.getUI());
+    }
+
+    private void scheduleAutomaticLogout(UI ui) {
+        Instant expiresAt = userSession.getExpiresAt();
+
+        if(expiresAt == null)
+            return;
+
+        cancelAutomaticLogout();
+
+        automaticLogoutTask = taskScheduler.schedule(
+                () -> {
+                    if(!ui.isAttached())
+                        return;
+
+                    ui.access(() -> {
+                        userSession.logout();
+
+                        ui.navigate(LoginView.class);
+
+                        Notification.show(
+                                "Сессия истекла. Войдите в приложение повторно.",
+                                5000,
+                                Notification.Position.MIDDLE);
+                    });
+                },
+                expiresAt);
+    }
+
+    private void cancelAutomaticLogout() {
+        if(automaticLogoutTask == null)
+            return;
+
+        automaticLogoutTask.cancel(false);
+        automaticLogoutTask = null;
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        cancelAutomaticLogout();
+
+        super.onDetach(detachEvent);
     }
 }
