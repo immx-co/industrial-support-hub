@@ -16,14 +16,18 @@ public interface DepartmentRepository extends JpaRepository<Department, UUID> {
 
     @Query(
             """
-                    SELECT department FROM Department department WHERE department.organization.id = :organizationId
+                    SELECT department
+                    FROM Department department
+                    WHERE department.organization.id = :organizationId
                     """
     )
     List<Department> findAllByOrganizationId(@Param("organizationId") UUID organizationId);
 
     @Query(
             """
-                    SELECT department FROM Department department WHERE department.id = :departmentId AND department.organization.id = :organizationId
+                    SELECT department
+                    FROM Department department
+                    WHERE department.id = :departmentId AND department.organization.id = :organizationId
                     """
     )
     Optional<Department> findByIdAndOrganizationId(@Param("organizationId") UUID organizationId,
