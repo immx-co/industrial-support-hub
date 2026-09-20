@@ -57,4 +57,12 @@ public interface IUserService {
      * @return коллекция ролей пользователя
      */
     Set<RoleName> getRoles(UUID userId);
+
+    /**
+     * Получает пользователя по его идентификатору.
+     *
+     * @param userId идентификатор пользователя
+     * @return найденный пользователь по идентификатору
+     */
+    User getById(UUID userId);
 }

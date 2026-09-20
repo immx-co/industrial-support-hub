@@ -11,7 +11,9 @@ import java.util.UUID;
  *
  * @param id               идентификатор пользователя
  * @param organizationId   идентификатор организации пользователя
+ * @param organizationName название организации пользователя
  * @param departmentId     идентификатор подразделения пользователя
+ * @param departmentName   название подразделения пользователя
  * @param externalId       внутренний идентификатор пользователя
  * @param username         пользовательское имя пользователя
  * @param email            электронная почта пользователя
@@ -25,7 +27,9 @@ import java.util.UUID;
  */
 public record UserResponse(UUID id,
                            UUID organizationId,
+                           String organizationName,
                            UUID departmentId,
+                           String departmentName,
                            String externalId,
                            String username,
                            String email,

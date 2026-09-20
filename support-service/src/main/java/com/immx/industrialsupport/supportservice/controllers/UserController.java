@@ -7,6 +7,8 @@ import com.immx.industrialsupport.contracts.user.UpdateUserRolesRequest;
 import com.immx.industrialsupport.contracts.user.UserResponse;
 import com.immx.industrialsupport.supportservice.entities.User;
 import com.immx.industrialsupport.supportservice.mappers.UserMapper;
+import com.immx.industrialsupport.supportservice.security.currentuser.AuthenticatedUserContext;
+import com.immx.industrialsupport.supportservice.security.currentuser.AuthenticatedUserContextProvider;
 import com.immx.industrialsupport.supportservice.services.user.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,6 +38,9 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private AuthenticatedUserContextProvider currentUserProvider;
+
     /**
      * Получает всех пользователей подразделения организации
      *
@@ -47,9 +52,7 @@ public class UserController {
             summary = "Получает всех пользователей подразделения организации",
             description = "Возвращает список пользователей подразделения организации"
     )
-    public ResponseEntity<IndustrialSupportResponseData<List<UserResponse>>> getAllUsersByDepartment(@PathVariable(
-            "departmentId"
-    ) UUID departmentId) {
+    public ResponseEntity<IndustrialSupportResponseData<List<UserResponse>>> getAllUsersByDepartment(@PathVariable UUID departmentId) {
         List<User> users = userService.getAllUsersByDepartmentId(departmentId);
         List<UserResponse> response = userMapper.toResponseList(users);
 
@@ -69,9 +72,7 @@ public class UserController {
             summary = "Получает всех пользователей организации",
             description = "Возвращает список пользователей подразделения организации"
     )
-    public ResponseEntity<IndustrialSupportResponseData<List<UserResponse>>> getAllUsersByOrganization(@PathVariable(
-            "organizationId"
-    ) UUID organizationId) {
+    public ResponseEntity<IndustrialSupportResponseData<List<UserResponse>>> getAllUsersByOrganization(@PathVariable UUID organizationId) {
         List<User> users = userService.getAllUsersByOrganizationId(organizationId);
         List<UserResponse> response = userMapper.toResponseList(users);
 
@@ -82,10 +83,10 @@ public class UserController {
 
     @PostMapping("/departments/{departmentId}")
     @Operation(
-            summary = "Создаёт пользователя подразделения",
-            description = "Возвращает созданного пользователя подразделения"
+            summary = "Создаёт пользователя в подразделении",
+            description = "Возвращает созданного пользователя в указанном подразделении"
     )
-    public ResponseEntity<IndustrialSupportResponseData<UserResponse>> createUser(@PathVariable("departmentId") UUID departmentId,
+    public ResponseEntity<IndustrialSupportResponseData<UserResponse>> createUser(@PathVariable UUID departmentId,
                                                                                   @RequestBody @Valid CreateUserRequest createUserRequest) {
         User user = userService.create(
                 departmentId,
@@ -102,7 +103,7 @@ public class UserController {
             summary = "Изменяет роли пользователя",
             description = "Возвращает пользователя с измененными ролями"
     )
-    public ResponseEntity<IndustrialSupportResponseData<UserResponse>> updateUserRoles(@PathVariable("id") UUID id,
+    public ResponseEntity<IndustrialSupportResponseData<UserResponse>> updateUserRoles(@PathVariable UUID id,
                                                                                        @RequestBody @Valid UpdateUserRolesRequest updateUserRolesRequest) {
         User user = userService.updateRoles(
                 id,
@@ -125,11 +126,32 @@ public class UserController {
             summary = "Получает коллекцию ролей пользователя по идентификатору",
             description = "Возвращает коллекцию ролей пользователя"
     )
-    public ResponseEntity<IndustrialSupportResponseData<Set<RoleName>>> getUserRoles(@PathVariable("id") UUID id) {
+    public ResponseEntity<IndustrialSupportResponseData<Set<RoleName>>> getUserRoles(@PathVariable UUID id) {
         Set<RoleName> roles = userService.getRoles(id);
 
         return ResponseEntity.ok(new IndustrialSupportResponseData<>(
                 "Коллекция ролей пользователя успешно получена",
                 roles));
+    }
+
+    /**
+     * Получает текущего пользователя.
+     *
+     * @return ответ модели пользователя
+     */
+    @GetMapping("/me")
+    @Operation(
+            summary = "Получает текущего пользователя",
+            description = "Возвращает профиль авторизованного пользователя"
+    )
+    public ResponseEntity<IndustrialSupportResponseData<UserResponse>> getCurrentUser() {
+        AuthenticatedUserContext currentUser = currentUserProvider.getCurrentUser();
+
+        User user = userService.getById(currentUser.userId());
+        UserResponse response = userMapper.toResponse(user);
+
+        return ResponseEntity.ok(new IndustrialSupportResponseData<>(
+                "Профиль текущего пользователя успешно получен",
+                response));
     }
 }

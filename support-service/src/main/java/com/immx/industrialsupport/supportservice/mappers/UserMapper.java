@@ -27,7 +27,12 @@ public class UserMapper {
                         .getOrganization()
                         .getId(),
                 user.getDepartment()
+                        .getOrganization()
+                        .getName(),
+                user.getDepartment()
                         .getId(),
+                user.getDepartment()
+                        .getName(),
                 user.getExternalId(),
                 user.getUsername(),
                 user.getEmail(),

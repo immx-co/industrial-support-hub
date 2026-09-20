@@ -155,19 +155,19 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         usernameBadge.getStyle()
                 .set(
                         "padding",
-                        "var(--lumo-space-xs) var(--lumo-space-m)")
+                        "var(--vaadin-padding-xs) var(--vaadin-padding-m)")
                 .set(
                         "border",
-                        "1px solid var(--lumo-primary-color-50pct)")
+                        "1px solid var(--aura-accent-border-color)")
                 .set(
                         "border-radius",
-                        "var(--lumo-border-radius-m)")
+                        "var(--vaadin-radius-m)")
                 .set(
                         "background-color",
-                        "var(--lumo-primary-color-10pct)")
+                        "var(--aura-accent-surface)")
                 .set(
                         "color",
-                        "var(--lumo-primary-text-color)")
+                        "var(--aura-accent-text-color)")
                 .set(
                         "font-weight",
                         "600");

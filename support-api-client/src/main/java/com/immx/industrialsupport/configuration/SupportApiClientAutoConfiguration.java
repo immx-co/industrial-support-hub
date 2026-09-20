@@ -2,6 +2,7 @@ package com.immx.industrialsupport.configuration;
 
 import com.immx.industrialsupport.client.AuthenticationClient;
 import com.immx.industrialsupport.client.IncidentClient;
+import com.immx.industrialsupport.client.UserClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -30,5 +31,11 @@ public class SupportApiClientAutoConfiguration {
     @ConditionalOnMissingBean(IncidentClient.class)
     public IncidentClient incidentClient() {
         return new IncidentClient();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(UserClient.class)
+    public UserClient userClient() {
+        return new UserClient();
     }
 }

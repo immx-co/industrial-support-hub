@@ -93,7 +93,7 @@ public class UserService implements IUserService {
         if(usernameAlreadyExists)
             throw new UserAlreadyExistsException(
                     "There is already exists user with username = " + createUserRequest.getUsername()
-                            + " в подразделении " + department.get()
+                    + " в подразделении " + department.get()
                             .getName());
 
         User user = new User(
@@ -174,5 +174,17 @@ public class UserService implements IUserService {
                 .stream()
                 .map(Role::getName)
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public User getById(UUID userId) {
+        User user = userRepository.findByIdWithRoles(userId)
+                .orElseThrow(() -> new NotFoundUserException("There is no user with ID = " + userId));
+
+        log.info(
+                "Пользователь с идентификатором {} успешно получен.",
+                userId);
+
+        return user;
     }
 }

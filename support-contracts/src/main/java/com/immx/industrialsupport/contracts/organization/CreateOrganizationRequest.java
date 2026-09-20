@@ -12,7 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateOrganizationRequest {
 
+    /**
+     * Внутренний идентификатор организации.
+     */
     private String externalId;
 
+    /**
+     * Имя организации.
+     */
     private String name;
 }
