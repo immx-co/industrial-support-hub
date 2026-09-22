@@ -9,6 +9,9 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Авторизованная сессия текущего пользователя.
+ */
 @Component
 @VaadinSessionScope
 public class UserSession {
